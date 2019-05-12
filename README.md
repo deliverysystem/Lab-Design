@@ -5,6 +5,7 @@
 
 #### 一、用户界面设计[待定]
 ##### 1.1 用户界面
+![](https://github.com/deliverysystem/Lab-Design/blob/master/pic/1.png)
 [图片,布局说明; 若有多种界面,请逐一说明]
 ##### 1.2 操作元素和操作效果
 [操作元素图片]

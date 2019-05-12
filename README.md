@@ -68,7 +68,7 @@
 #### 三、系统模块划分
  
 ##### 3.1模块功能简要描述及各模块函数说明：
-
+	http://github.com/linln1/deliverysystem/raw/master/pic/1.png
 ###### Step1.tools.h
 	 1、	设置窗口大小函数
 		void SetWindowSize(int cols, int lines);
@@ -83,7 +83,7 @@
 		调用方法 point->PrintCanteen();
 		房子中间至少要能放入两个汉字                          ------
 		现在假设道路占3个				     |餐 厅|
- 		void PrintResidence();//同理                        ------ 如此规格的房屋
+ 		void PrintResidence();//同理                        ------  如此规格的房屋
 	 2、打印一个骑手图案函数
 		void PrintRider()  用法 point->PrintRider()
 												暂时设计的是打印一个*
@@ -165,7 +165,7 @@
 	void printmove(rider a[],int size)
 	需要传入骑手结构体和骑手当前的个数（即骑手数组的大小）
 ##### 3.2函数调用图示及说明
-//jpg
+	http://github.com/linln1/deliverysystem/raw/master/pic/2.png
  
 ##### 函数调用关系图说明：
 1、main调用start,程序开始运行。
@@ -178,4 +178,4 @@
 
 
 #### 四、高层算法设计
-//jpg
+	http://github.com/linln1/deliverysystem/raw/master/pic/3.png

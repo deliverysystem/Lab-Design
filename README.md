@@ -5,9 +5,9 @@
 
 #### 一、用户界面设计[待定]
 ##### 1.1 用户界面
-![](https://github.com/deliverysystem/Lab-Design/blob/master/pic/1.png)
 [图片,布局说明; 若有多种界面,请逐一说明]
 ##### 1.2 操作元素和操作效果
+![](https://github.com/deliverysystem/Lab-Design/blob/master/pic/2.png)
 [操作元素图片]
 [操作的上下文描述]
 [操作后显示效果图片]
@@ -67,7 +67,7 @@
 
 
 #### 三、系统模块划分
- 
+![](https://github.com/deliverysystem/Lab-Design/blob/master/pic/1.png)
 ##### 3.1模块功能简要描述及各模块函数说明：
 	 ![Image text](https://github.com/linln1/Lab-Design/raw/master/pic/1.png)
 ###### Step1.tools.h

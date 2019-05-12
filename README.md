@@ -34,7 +34,7 @@
 		int overtime;//骑手超时数 
 			Rider whichone();//分配订单函数
 	}Rider;
-##### 3.2 模块常量与变量定义
+##### 2.2 模块常量与变量定义
 ###### Tools.h文件中
 	int cols//窗口长度
 	int lines//窗口宽度

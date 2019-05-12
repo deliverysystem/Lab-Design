@@ -7,7 +7,6 @@
 ##### 1.1 用户界面
 [图片,布局说明; 若有多种界面,请逐一说明]
 ##### 1.2 操作元素和操作效果
-![](https://github.com/deliverysystem/Lab-Design/blob/master/pic/2.png)
 [操作元素图片]
 [操作的上下文描述]
 [操作后显示效果图片]
@@ -166,7 +165,7 @@
 	void printmove(rider a[],int size)
 	需要传入骑手结构体和骑手当前的个数（即骑手数组的大小）
 ##### 3.2函数调用图示及说明
-	 ![image](https://github.com/deliverysystem/Lab-Design/raw/master/pic/2.png)
+![](https://github.com/deliverysystem/Lab-Design/blob/master/pic/2.png)
  
 ##### 函数调用关系图说明：
 1、main调用start,程序开始运行。
@@ -179,4 +178,4 @@
 
 
 #### 四、高层算法设计
-	 ![image](https://github.com/deliverysystem/Lab-Design/raw/master/pic/3.png)
+![image](https://github.com/deliverysystem/Lab-Design/raw/master/pic/3.png)

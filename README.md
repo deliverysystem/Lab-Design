@@ -68,7 +68,7 @@
 #### 三、系统模块划分
  
 ##### 3.1模块功能简要描述及各模块函数说明：
-	 ![image](https://github.com/deliverysystem/Lab-Design/raw/master/pic/1.png)
+	 ![Image text](https://github.com/linln1/Lab-Design/raw/master/pic/1.png)
 ###### Step1.tools.h
 	 1、	设置窗口大小函数
 		void SetWindowSize(int cols, int lines);

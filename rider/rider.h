@@ -54,20 +54,18 @@ class List{
      		ListNode* last() const {
         		return _size == 0 ? NULL : trailer->pred;
     		}
-
+	        void InsertAsl(ListNode* p);//插入到最后面 
+	        void remove(ListNode* p);// 删除
 		List& operator =(const List& A)//赋值运算符重载  例如 A是一个List B是一个List  A=B 就是把B直接赋值给A
 		{
 		      this._size = A.size();
 		      ListNode* temp = A.first();
 		      while(temp!=A.last()){
 			  this.InsertAsl(temp);
+			  temp = temp->next;
 		      }
 		      return *this;
-		}
-
-	       void InsertAsl(ListNode* p);//插入到最后面 
-	       void remove(ListNode* p);// 删除
-	  	 
+		}	  	 
 };
 
 void List::init(){

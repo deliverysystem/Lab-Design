@@ -22,7 +22,7 @@ class Rider{
     Point A(int x,int y):x(x),y(y);
     Rider() {}
     Rider(int x,int y):x(x),y(y);
-    void CalculatePath(Menu* newlist);
+    void CalculatePath();
     int Manhatten(Point x,Point y);
     void GeneratePath(Point A,int id);
     void PrintState();

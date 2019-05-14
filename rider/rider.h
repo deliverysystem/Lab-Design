@@ -28,7 +28,7 @@ class Rider{
     void PrintState();
     int AllThingsDone();//返回送完最后一单的时间
     ~Rider() {}
-    friend Menu;
+    friend class Menu;
 }
 
 #endif //RIDER_H

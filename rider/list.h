@@ -31,7 +31,7 @@ ListNode* listNode::insertAsSucc(const int& x,const int& y,const int& t)
 class List{
   	private:
   	 	int _size; 
-  	 	ListNode* header,trailer;
+  	 	ListNode* header,tailer;
   	protected:
   	 	void init();
   	 	int clear();
@@ -46,7 +46,7 @@ class List{
 		 bool empty() const { return _size <= 0 ;}
 		 //int& operator[] (Rank r) const; 
 		 ListNode* first() const { return header->next ;} 
-		 ListNode* last() const { return trailer->pred ;}
+		 ListNode* last() const { return tailer->pred ;}
 		 bool vaild (ListNode* p)
 		 {
 		     return p&&(trailer !=p )&&( header !=p) ;

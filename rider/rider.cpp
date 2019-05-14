@@ -77,7 +77,7 @@ void Rider::GeneratePath(point Now,Menu* now, int T)
 
 
 Rider::void CalculatePath(Menu* newmenu){
-    OldPath(Path);//先把现在的路径存下来 
+    OldPath=Path;//先把现在的路径存下来 
     Path.clear();//清空路径 
     int Nowx = this->x;
     int Nowy = this->y;//取出骑手的坐标 
@@ -95,14 +95,24 @@ Rider::void CalculatePath(Menu* newmenu){
     cnt+=1;//订单数+1 
     
     int T = systemclock;
-    if(cnt==1) 
-        GeneratePath(ts,newmenu,T); //只有新加入的订单一个单 
+    if(cnt==1) {
+	    GeneratePath(ts,newmenu,T);
+	    //先取餐
+	     T += Manhatten(ts,(point)( menu[1]->x1, menu[1]->y1));
+             ts = (point)( menu[1]->x1, menu[1]->y1);
+             menu[minid]->get=1;
+	    //再送餐
+	    GeneratePath(ts,newmenu,T);
+	    T += Manhatten(ts,(point)( menu[1]->x2, menu[1]->y2));
+            ts = (point)( menu[1]->x2, menu[1]->y2);
+            menu[minid]->reach=1;
+    }//只有新加入的订单一个单 
 	
 	
 	// 除了最后一个单不确定之外 ，其余的订单都已经被分配好了，但是不一定骑手已经取到了餐，所以需要记一下已经取到餐的订单 ,也就是说骑手要遍历所有没有到过的点使得时间最短并且每个点按时到达
     else if(cnt>1){
         //必须知道目前的那些订单骑手已经取过餐了 设其有m 个 那么 2*n-m则为剩下的点数 其中 n-m个点代表餐馆 只有先到达这n-m个点 才能到达对应的目的
-        for(int i=1;i<=cnt;i++)
+        for(int i=1;i<=2*cnt;i++)
             {	
                 //对所有可达的点 求最小值 然后加入Path就行 ,最朴素
                 int minid=0;
@@ -121,8 +131,9 @@ Rider::void CalculatePath(Menu* newmenu){
                                mind = min(mind,Manhatten(ts,(point)( menu[i]->x1, menu[i]->y1)));      
                         }
                     }
+		if(midid==0) break;
                 GeneratePath(ts,menu[i],T);
-                if( !(menu[minid]->get))
+                if(!(menu[minid]->get))
                     {
                         T += Manhatten(ts,(point)( menu[minid]->x2, menu[minid]->y2));
                         ts = (point)( menu[minid]->x2, menu[minid]->y2);
@@ -139,7 +150,7 @@ Rider::void CalculatePath(Menu* newmenu){
     }
     
     //计算现在路径的时间 
-	T = systemclock;
+    T = systemclock;
     T+ = Path->size(); 
 	
 	//交换现在的路径和原来的路径 
@@ -154,7 +165,7 @@ Rider::void CalculatePath(Menu* newmenu){
 
 void Rider::AddTOWaitlist(Menu* newmenu)//将新的订单添加进waitlist 
 {
-	Menu* temp = waitlist;
+    Menu* temp = waitlist;
     int cnt=0;
     while(temp!=nullptr){
         cnt++;

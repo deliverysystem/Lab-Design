@@ -60,9 +60,6 @@ ListNode* List::insert(Rank r, const int& x,const int& y,const int& t)
 
 void List::remove(ListNode* p)。
 {	
-	int x = p->x;
-	int y = p->y;
-	int t = p->t;
 	p->pred->next = p->next;
 	p->next->pred = p->pred;
 	_size--;

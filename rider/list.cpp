@@ -14,7 +14,7 @@ void List::init(){
 int List::clear()
 {
 		int oldSize = _size;
-		while (header->next != trailer)
+		while (header->next != tailer)
 			remove(header->next);
 		return oldSize;
 }
@@ -42,7 +42,7 @@ ListNode* List::InsertAsf(const int& x,const int& y,const int& t)
 ListNode* List::InsertAsl(const int& x,const int& y,const int& t)
 {
 		_size++;	
-		ListNode *p = trailer->insertAsPred(x,y,t);	
+		ListNode *p = tailer->insertAsPred(x,y,t);	
 		return p;	
 }
 

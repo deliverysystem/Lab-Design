@@ -9,6 +9,7 @@ class Rider{
   private:
     int exist;
     int x,y;
+    Point A(x,y);
     Menu* waitlist;
     List Path;
     int receive;//骑手的接单数

@@ -23,8 +23,8 @@ ListNode* ListNode::insertAsPred(const int& x,const int& y,const int& t)
 ListNode* listNode::insertAsSucc(const int& x,const int& y,const int& t)
 {
 	ListNode *p = new ListNode(x,y,t, this, next);
-	succ->next = p;
-	succ = p;
+	next->next = p;
+	next = p;
 	return p;
 }
 
@@ -53,10 +53,10 @@ class List{
 		 }
 	
 
-		void InsertAsf(int const& e);
-		void InsertAsl(int const& e);
-		ListNode* InsertAsf(ListNode* ,int const& e);
-		ListNode* InsertAsl(ListNode* ,int const& e); 
+		void InsertAsf(const int& x,const int& y,const int& t);
+		void InsertAsl(const int& x,const int& y,const int& t);
+		ListNode* InsertAsf(ListNode* ,const int& x,const int& y,const int& t);
+		ListNode* InsertAsl(ListNode* ,const int& x,const int& y,const int& t); 
 	  
 	    void remove(Rank r);
 	  	 

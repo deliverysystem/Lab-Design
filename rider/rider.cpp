@@ -9,7 +9,7 @@ Rider::int Manhatten(Point A,Point B)
     return  abs(A.x-B.x)+abs(A.y-B.y);
 }
 
-void Rider::GeneratePath(Point Now,int id ，int T)
+void Rider::GeneratePath(Point Now,int id ,int T)
 {
 //T 是要变的 
     if(!menu[id].get)
@@ -68,7 +68,7 @@ void Rider::GeneratePath(Point Now,int id ，int T)
 }
 
 
-Rider::void CalculatePath(Menu* newlist){
+Rider::void CalculatePath(){
     // 把newlist 加到waitlist末尾
     int Nowx = this->x;
     int Nowy = this->y;
@@ -85,7 +85,7 @@ Rider::void CalculatePath(Menu* newlist){
         //如果该单未被取
                 //餐馆的坐标menu[0].x1,menu[0].y1;
             //送餐地址的坐标 menu[0].x2,menu[0].y2;
-            GeneratePath(ts,0，T); 
+            GeneratePath(ts,0,T); 
 
     }// 除了最后一个单不确定之外 ，其余的订单都已经被分配好了，但是不一定骑手已经取到了餐，所以需要记一下已经取到餐的订单 ,也就是说骑手要遍历所有没有到过的点使得时间最短并且每个点按时到达
     else if(cnt >1){

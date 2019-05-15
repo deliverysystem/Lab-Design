@@ -85,10 +85,10 @@ void start()
 		}								
 		//5、判断是否到达送餐点，判断是否超时,采用遍历订单的方法 
 		for(j=0;j<size;j++){				
-			if(menu[j].x1==(menu[j].p)->x&&menu[j].y1==(menu[j].p)->y&&menu[j].take==0){ //骑手到达接餐地 
+			if(((menu[j].x1-3)==(menu[j].p)->x&&menu[j].y1==(menu[j].p)->y)||(menu[j].x1==(menu[j].p)->x&&(menu[j].y1+5)==(menu[j].p)->y)||(menu[j].x1==(menu[j].p)->x&&(menu[j].y1-4)==(menu[j].p)->y)||((menu[j].x1+3)==(menu[j].p)->x&&(menu[j].y1)==(menu[j].p)->y)&&menu[j].take==0){ //骑手到达接餐地 
 				menu[j].take=1;
 			}
-			if(menu[j].x2==(menu[j].p)->x&&menu[j].y2==(menu[j].p)->y&&menu[j].take==1){	//骑手到达送餐地 
+			if(((menu[j].x2-3)==(menu[j].p)->x&&menu[j].y2==(menu[j].p)->y)||(menu[j].x2==(menu[j].p)->x&&(menu[j].y2+5)==(menu[j].p)->y)||(menu[j].x2==(menu[j].p)->x&&(menu[j].y2-4)==(menu[j].p)->y)||((menu[j].x2+3)==(menu[j].p)->x&&(menu[j].y2)==(menu[j].p)->y)&&menu[j].take==1){	//骑手到达送餐地 
 				if(sysclock-menu[j].endtime>=60){		//破产 
 					money=-100;
 					boolnumber=bankruptcy();

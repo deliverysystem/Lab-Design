@@ -9,8 +9,8 @@ public:
 	int getY() {return this->y;};
 	void clear();
 	void PrintRider();
-	void PrintCanteen();//鎵撳嵃椁愬巺
-	void PrintResidence();//鎵撳嵃浣忔墍
+	void PrintCanteen();//打印餐厅
+	void PrintResidence();//打印住所
 	void changeposi(int fx,int fy){
 		x=fx,y=fy;
 	};
@@ -18,11 +18,8 @@ public:
 		return (a.x==x)&&(a.y==y);
 	};
 	~point(){}
-
-private:
 	int x,y;
 };
 
 
 #endif 
-

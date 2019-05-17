@@ -2,14 +2,11 @@
 #include"point.h"
 #include"tools.h"
 #include"message.h"
-void printmessage(Message a){
+void printmessage(struct message a){
 	int i;
-	SetCursorPosition(53,0);
-	printf("å½“å‰é’±æ•°ï¼š%d\n",a.money);
-	for(i=0;rider[i].exist==1;i++){ 
-		printf("éª‘æ‰‹%dçš„ä½ç½®ï¼š(%d,%d)\n",i+1,(rider[i].x-1)/3,2*(rider[i].y-2)/9);
-	} 
-	printf("æ¥å•æ•°ï¼š%d\n",a.sum);
-	printf("å®Œæˆæ•°ï¼š%d\n",a.accomplish);
-	printf("è¶…æ—¶æ•°ï¼š%d\n",a.overtime);
+	SetCursorPosition(52,0);
+	printf("µ±Ç°Ç®Êı£º%d\n",a.messagemoney);
+	printf("½Óµ¥Êı£º%d\n",a.sum);
+	printf("Íê³ÉÊı£º%d\n",a.accomplish);
+	printf("³¬Ê±Êı£º%d\n",a.totalovertime);
 }

@@ -1,14 +1,14 @@
-#ifndef CONTROLLER_H
-#define CONTROLLER_H
+#ifndef MESSAGE_H
+#define MESSAGE_H
 
-typedef struct message
+struct message
 {
 	int messagemoney;    //当前钱数 
  	int sum;	  //接单数 
  	int accomplish;//完成数 
- 	int overtime;//超时数 
-}Message;
+ 	int totalovertime;//超时数 
+};
 
-extern void printmessage(Message ,Rider []);
+extern void printmessage(struct message);
 
 #endif

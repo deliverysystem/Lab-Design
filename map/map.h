@@ -5,7 +5,8 @@
 using namespace std;
 
 class Map{
-    void init(){
+   public:
+	void init(){
     for(x=0;x<60;x+=6)
      for(y=0;y<80;y+=8)
        {
@@ -16,9 +17,8 @@ class Map{
               c.PrintResidence();
        }
     }
-    private:
      int x,y;
-     int Graph[60][60];//ç”¨äºŽè®°å½•æŸä¸ªä½ç½®æ˜¯é¤åŽ…è¿˜æ˜¯ä½æ‰€ é¤åŽ…ä¸º1,ä½æ‰€ä¸º0
-}
+     int Graph[60][60];//ÓÃÓÚ¼ÇÂ¼Ä³¸öÎ»ÖÃÊÇ²ÍÌü»¹ÊÇ×¡Ëù ²ÍÌüÎª1,×¡ËùÎª0
+};
 
 #endif // MAP_H

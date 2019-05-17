@@ -15,20 +15,20 @@ void point::PrintRider(){
 
 void point::PrintCanteen(){
 	SetCursorPosition(x,y);
-	std::cout<<"------"<<endl;
+	std::cout<<"-----"<<endl;
 	SetCursorPosition(x+1,y);
-	std::cout<<"|    |"<<endl;
+	std::cout<<"|   |"<<endl;
 	SetCursorPosition(x+2,y);
-	std::cout<<"------";
+	std::cout<<"-----";
 	SetCursorPosition(x,y);
 }
 
 void point::PrintResidence(){
 	SetCursorPosition(x,y);
-	std::cout<<"------"<<endl;
+	std::cout<<"-----"<<endl;
 	SetCursorPosition(x+1,y);
-	std::cout<<"|    |"<<endl;
+	std::cout<<"|   |"<<endl;
 	SetCursorPosition(x+2,y);
-	std::cout<<"------";
+	std::cout<<"-----";
 	SetCursorPosition(x,y);
 }

@@ -2,180 +2,195 @@
 #include "menu.h"
 #include "controller.h"
 #define INF 0x3f3f3f3f
+#define The_ith(this,i) waitlist[i];
+//#define The_ith(this,minid) waitlist[minid];
+//#define The_ith(this,cnt) waitlist[cnt];
 
-typedef The_ith(this,i) menu[i]; 
-typedef The_ith(this,minid) menu[minid];
+//ÏÂÃæ³öÏÖµÄthis ÊÇÖ¸Ïòµ±Ç°rider µÄÒ»¸öÖ¸Õë
 
-//ä¸‹é¢å‡ºç°çš„this æ˜¯æŒ‡å‘å½“å‰rider çš„ä¸€ä¸ªæŒ‡é’ˆ
-
-Rider::int Manhatten(point A,Point B)
+inline int min(int a,int b)
 {
-    return  abs(A.x-B.x)+abs(A.y-B.y);
+	return a<b? a:b;
 }
 
-void Rider::GeneratePath(point Now,Menu* now, int T)
+int Rider::Manhatten(point* A,point* B)
 {
-//T æ˜¯è¦å˜çš„ 
+    return  abs(A->x-B->x)+abs(A->y-B->y);
+}
+
+void Rider::GeneratePath(point* Now,struct menu* now, int T)
+{
+//T ÊÇÒª±äµÄ 
     if(!now->get)
      {
-            int disx = abs(Now.x-now->x1);
-            int disy = abs(Now.y-now->y1);
+            int disx = abs(Now->x-now->x1);
+            int disy = abs(Now->y-now->y1);
                 int Length = disx + disy;
-                        //å‘ä¸Šè¿˜æ˜¯å‘ä¸‹
+                        //ÏòÉÏ»¹ÊÇÏòÏÂ
                         for(int dx=0;dx<=disx;dx++)
                             {
-                                if(Now.x-now.x1<0)
-                                    ListNode* temp = new ListNode(Now.x+dx,Now.y,i+T);
-                                else if(Now.x-now.x1>0)
-                                    ListNode* temp = new ListNode(Now.x-dx,Now.y,i+T);
-                                Path->InsertAsl(temp);
+                            	ListNode* temp;
+                                if(Now->x-now->x1<0)
+                                    temp = new ListNode(Now->x+dx,Now->y,dx+T);
+                                else if(Now->x-now->x1>0)
+                                    temp = new ListNode(Now->x-dx,Now->y,dx+T);
+                                Path.InsertAsl(temp);
                             }
                         int X;
-                        if(Now.x-now->x1<0)
-                        	X = Now.x+disx;
+                        if(Now->x-now->x1<0)
+                        	X = Now->x+disx;
                         else 
-                        	X = Now.x-disx;
-                        //å‘å·¦è¿˜æ˜¯å‘å³
+                        	X = Now->x-disx;
+                        //Ïò×ó»¹ÊÇÏòÓÒ
                         for(int dy=1;dy<=disy;dy++)
                             {
-                                if(Now.y-now.y1<0)
-                                    ListNode* temp = new ListNode(X,Now.y+dy,i+T);
-                                else if(Now.y-now.y1>0)
-                                    ListNode* temp = new ListNode(X,Now.y-dy,i+T);
-                                Path->InsertAsl(temp);
+                            	ListNode* temp;
+                                if(Now->y-now->y1<0)
+                                     temp = new ListNode(X,Now->y+dy,dy+T);
+                                else if(Now->y-now->y1>0)
+                                    temp = new ListNode(X,Now->y-dy,dy+T);
+                                Path.InsertAsl(temp);
                             }
      }
      else {
-            int disx = abs(Now.x-now->x2);
-                int disy = abs(Now.y-now->y2);
+            int disx = abs(Now->x-now->x2);
+                int disy = abs(Now->y-now->y2);
                 int Length = disx + disy;
-                	    //æƒ³ä¸Šè¿˜æ˜¯å‘ä¸‹ 
+                	    //ÏëÉÏ»¹ÊÇÏòÏÂ 
                        for(int dx=0;dx<=disx;dx++)
                             {
-                                if(Now.x-now->x2<0)
-                                    ListNode* temp = new ListNode(Now.x+dx,Now.y,i+T);
-                                else if(Now.x-now->x2>0)
-                                    ListNode* temp = new ListNode(Now.x-dx,Now.y,i+T);
-                                Path->InsertAsl(temp);
+                            	ListNode* temp; 
+                                if(Now->x-now->x2<0)
+                                    temp = new ListNode(Now->x+dx,Now->y,dx+T);
+                                else if(Now->x-now->x2>0)
+                                    temp = new ListNode(Now->x-dx,Now->y,dx+T);
+                                Path.InsertAsl(temp);
                             }
                         int X;
-                        if(Now.x-now->x2<0)
-                        	X = Now.x+disx;
+                        if(Now->x-now->x2<0)
+                        	X = Now->x+disx;
                         else 
-                        	X = Now.x-disx;
-                        //å‘å·¦è¿˜æ˜¯å‘å³
+                        	X = Now->x-disx;
+                        // ÏÂÃæµÄTÒª±ä 
+                        //Ïò×ó»¹ÊÇÏòÓÒ
                         for(int dy=1;dy<=disy;dy++)
                             {
-                                if(Now.y-now->y2<0)
-                                    ListNode* temp = new ListNode(X,Now.y+dy,i+T);
-                                else if(Now.y-now->y2>0)
-                                    ListNode* temp = new ListNode(X,Now.y-dy,i+T);
-                                Path->InsertAsl(temp);
+                            	ListNode* temp;
+                                if(Now->y-now->y2<0)
+                                    temp = new ListNode(X,Now->y+dy,dy+T);
+                                else if(Now->y-now->y2>0)
+                                    temp = new ListNode(X,Now->y-dy,dy+T);
+                                Path.InsertAsl(temp);
                             }
      }
 }
 
 
-Rider::void CalculatePath(Menu* newmenu){
-    OldPath=Path;//å…ˆæŠŠç°åœ¨çš„è·¯å¾„å­˜ä¸‹æ¥ 
-    Path.clear();//æ¸…ç©ºè·¯å¾„ 
+int Rider:: CalculatePath(struct menu* newmenu){
+    OldPath=Path;//ÏÈ°ÑÏÖÔÚµÄÂ·¾¶´æÏÂÀ´ 
+    Path.clear();//Çå¿ÕÂ·¾¶ 
     int Nowx = this->x;
-    int Nowy = this->y;//å–å‡ºéª‘æ‰‹çš„åæ ‡ 
-    point* ts = new point(Nowx,Nowy);//æ„é€ éª‘æ‰‹point 
+    int Nowy = this->y;//È¡³öÆïÊÖµÄ×ø±ê 
+    point* ts = new point(Nowx,Nowy);//¹¹ÔìÆïÊÖpoint 
     
-    //è®¡ç®—è®¢å•æ•° 
-    Menu* temp = waitlist;
+    //¼ÆËã¶©µ¥Êı 
+    struct menu* temp = waitlist;
     int cnt=0;
-    while(temp!=nullptr){
+    while(temp!=NULL){
         cnt++;
-        temp = temp->next;
+        temp = temp->nextmenu;
     }
     
-    The_ith(this,cnt)->next=newmenu;//å…ˆæŠŠæ–°è®¢å•åŠ å…¥é“¾è¡¨ 
-    cnt+=1;//è®¢å•æ•°+1 
+    waitlist[cnt].nextmenu=newmenu;//ÏÈ°ÑĞÂ¶©µ¥¼ÓÈëÁ´±í 
+    cnt+=1;//¶©µ¥Êı+1 
     
-    int T = systemclock;
+    int T = sysclock;
     if(cnt==1) {
 	    GeneratePath(ts,newmenu,T);
-	    //å…ˆå–é¤
-	     T += Manhatten(ts,(point)( menu[1]->x1, menu[1]->y1));
-             ts = (point)( menu[1]->x1, menu[1]->y1);
-             menu[minid]->get=1;
-	    //å†é€é¤
+	    //ÏÈÈ¡²Í
+	    point* A = new point(waitlist[1].x1, waitlist[1].y1);
+	     T += Manhatten(ts,A);
+             ts = A;
+            waitlist[1].get=1;
+	    //ÔÙËÍ²Í
 	    GeneratePath(ts,newmenu,T);
-	    T += Manhatten(ts,(point)( menu[1]->x2, menu[1]->y2));
-            ts = (point)( menu[1]->x2, menu[1]->y2);
-            menu[minid]->reach=1;
-    }//åªæœ‰æ–°åŠ å…¥çš„è®¢å•ä¸€ä¸ªå• 
+	    point* B = new point(waitlist[1].x2, waitlist[1].y2);
+	    T += Manhatten(ts,B);
+            ts = B;
+            waitlist[1].reach=1;
+    }//Ö»ÓĞĞÂ¼ÓÈëµÄ¶©µ¥Ò»¸öµ¥ 
 	
 	
-	// é™¤äº†æœ€åä¸€ä¸ªå•ä¸ç¡®å®šä¹‹å¤– ï¼Œå…¶ä½™çš„è®¢å•éƒ½å·²ç»è¢«åˆ†é…å¥½äº†ï¼Œä½†æ˜¯ä¸ä¸€å®šéª‘æ‰‹å·²ç»å–åˆ°äº†é¤ï¼Œæ‰€ä»¥éœ€è¦è®°ä¸€ä¸‹å·²ç»å–åˆ°é¤çš„è®¢å• ,ä¹Ÿå°±æ˜¯è¯´éª‘æ‰‹è¦éå†æ‰€æœ‰æ²¡æœ‰åˆ°è¿‡çš„ç‚¹ä½¿å¾—æ—¶é—´æœ€çŸ­å¹¶ä¸”æ¯ä¸ªç‚¹æŒ‰æ—¶åˆ°è¾¾
+	// ³ıÁË×îºóÒ»¸öµ¥²»È·¶¨Ö®Íâ £¬ÆäÓàµÄ¶©µ¥¶¼ÒÑ¾­±»·ÖÅäºÃÁË£¬µ«ÊÇ²»Ò»¶¨ÆïÊÖÒÑ¾­È¡µ½ÁË²Í£¬ËùÒÔĞèÒª¼ÇÒ»ÏÂÒÑ¾­È¡µ½²ÍµÄ¶©µ¥ ,Ò²¾ÍÊÇËµÆïÊÖÒª±éÀúËùÓĞÃ»ÓĞµ½¹ıµÄµãÊ¹µÃÊ±¼ä×î¶Ì²¢ÇÒÃ¿¸öµã°´Ê±µ½´ï
     else if(cnt>1){
-        //å¿…é¡»çŸ¥é“ç›®å‰çš„é‚£äº›è®¢å•éª‘æ‰‹å·²ç»å–è¿‡é¤äº† è®¾å…¶æœ‰m ä¸ª é‚£ä¹ˆ 2*n-måˆ™ä¸ºå‰©ä¸‹çš„ç‚¹æ•° å…¶ä¸­ n-mä¸ªç‚¹ä»£è¡¨é¤é¦† åªæœ‰å…ˆåˆ°è¾¾è¿™n-mä¸ªç‚¹ æ‰èƒ½åˆ°è¾¾å¯¹åº”çš„ç›®çš„
+        //±ØĞëÖªµÀÄ¿Ç°µÄÄÇĞ©¶©µ¥ÆïÊÖÒÑ¾­È¡¹ı²ÍÁË ÉèÆäÓĞm ¸ö ÄÇÃ´ 2*n-mÔòÎªÊ£ÏÂµÄµãÊı ÆäÖĞ n-m¸öµã´ú±í²Í¹İ Ö»ÓĞÏÈµ½´ïÕân-m¸öµã ²ÅÄÜµ½´ï¶ÔÓ¦µÄÄ¿µÄ
         for(int i=1;i<=2*cnt;i++)
             {	
-                //å¯¹æ‰€æœ‰å¯è¾¾çš„ç‚¹ æ±‚æœ€å°å€¼ ç„¶ååŠ å…¥Pathå°±è¡Œ ,æœ€æœ´ç´ 
+                //¶ÔËùÓĞ¿É´ïµÄµã Çó×îĞ¡Öµ È»ºó¼ÓÈëPath¾ÍĞĞ ,×îÆÓËØ
                 int minid=0;
                 int mind=INF;
-                for(int i=0;i<=cnt;i++)
+                for(int i=1;i<=cnt;i++)
                     {
-                        if( menu[i]->get&&!(menu[i]->reach))//å¯¹äºå·²ç»å–åˆ°é¤çš„è®¢å•
+                        if( waitlist[i].get&&!(waitlist[i].reach))//¶ÔÓÚÒÑ¾­È¡µ½²ÍµÄ¶©µ¥
                             {
-                                if(mind<Manhatten(ts,(point)( menu[i]->x2, menu[i]->y2)))
+                            	point* B = new point(waitlist[i].x2, waitlist[i].y2);
+                                if(mind<Manhatten(ts,B))
                                     minid = i;
-                                mind= min(mind,Manhatten(ts,(point)( menu[i]->x2, menu[i]->y2)));
+                                mind= min(mind,Manhatten(ts,B));
                             }
-                        else if(!(menu[i]->get)){//å¯¹äºæœªå–åˆ°çš„è®¢å•
-                                if(mind<Manhatten(ts,(point)( menu[i]->x1, menu[i]->y1)))
+                        else if(!(waitlist[i].get)){//¶ÔÓÚÎ´È¡µ½µÄ¶©µ¥
+                        		point* A = new point(waitlist[i].x1, waitlist[i].y1);
+                                if(mind<Manhatten(ts,A))
                                     minid = i;
-                               mind = min(mind,Manhatten(ts,(point)( menu[i]->x1, menu[i]->y1)));      
+                               mind = min(mind,Manhatten(ts,A));      
                         }
                     }
-		if(midid==0) break;
-                GeneratePath(ts,menu[i],T);
-                if(!(menu[minid]->get))
+		if(minid==0) break;
+               // GeneratePath(ts,waitlist[minid],T);
+                if(!(waitlist[minid].get))
                     {
-                        T += Manhatten(ts,(point)( menu[minid]->x2, menu[minid]->y2));
-                        ts = (point)( menu[minid]->x2, menu[minid]->y2);
-                         menu[minid]->reach=1;
+                    	point* B = new point(waitlist[minid].x2, waitlist[minid].y2);
+                        T += Manhatten(ts,B);
+                        ts = B;
+                         waitlist[minid].reach=1;
                     }
                 else 
                     {
-                        T += Manhatten(ts,(point)( menu[minid]->x1, menu[minid]->y1));
-                        ts = (point)( menu[minid]->x1, menu[minid]->y1);
-                         menu[minid]->get=1;
+                    	point* A = new point(waitlist[i].x1, waitlist[i].y1);
+                        T += Manhatten(ts,A);
+                        ts = A;
+                         waitlist[minid].get=1;
                     }
                    
             }
     }
     
-    //è®¡ç®—ç°åœ¨è·¯å¾„çš„æ—¶é—´ 
-    T = systemclock;
-    T+ = Path->size(); 
+    //¼ÆËãÏÖÔÚÂ·¾¶µÄÊ±¼ä 
+    T = sysclock;
+    T += Path._size; 
 	
-	//äº¤æ¢ç°åœ¨çš„è·¯å¾„å’ŒåŸæ¥çš„è·¯å¾„ 
+	//½»»»ÏÖÔÚµÄÂ·¾¶ºÍÔ­À´µÄÂ·¾¶ 
     List transition(OldPath);
     OldPath = Path; 
     Path = transition;
-
-    The_ith(this,cnt-1)->next=nullptr;//ä»waitlisté‡Œé¢åˆ é™¤newmenu
+	cnt = cnt-1;
+    waitlist[cnt].nextmenu=NULL;//´ÓwaitlistÀïÃæÉ¾³ınewmenu
     return T;
     
 }
 
-void Rider::AddTOWaitlist(Menu* newmenu)//å°†æ–°çš„è®¢å•æ·»åŠ è¿›waitlist 
+void Rider::AddTOWaitlist(struct menu* newmenu)//½«ĞÂµÄ¶©µ¥Ìí¼Ó½øwaitlist 
 {
-    Menu* temp = waitlist;
+    struct menu* temp = waitlist;
     int cnt=0;
-    while(temp!=nullptr){
+    while(temp!=NULL){
         cnt++;
-        temp = temp->next;
+        temp = temp->nextmenu;
     }
-	The_ith(this,cnt)->next=newmenu;//å°†newmenuåŠ å…¥waitlist
+	waitlist[cnt].nextmenu=newmenu;//½«newmenu¼ÓÈëwaitlist
 	
-	Path = OldPath; //OldPathæ˜¯å½“æ—¶å‡è®¾æœ‰æ­¤å•æ—¶ç®—å‡ºçš„è·¯å¾„ï¼Œè¿™æ—¶çœŸçš„æœ‰äº†è¿™ä¸€å•ï¼Œç›´æ¥ç”¨OldPathè¦†ç›–Path 
+	Path = OldPath; //OldPathÊÇµ±Ê±¼ÙÉèÓĞ´Ëµ¥Ê±Ëã³öµÄÂ·¾¶£¬ÕâÊ±ÕæµÄÓĞÁËÕâÒ»µ¥£¬Ö±½ÓÓÃOldPath¸²¸ÇPath 
 }
 
-//å¯¹äºæ—¶é—´ä¸å¤Ÿçš„è®¢å• ä¸èƒ½æŒ‰ç…§ä¸Šè¿°æ¡ä»¶æ¥åš.
-
+//¶ÔÓÚÊ±¼ä²»¹»µÄ¶©µ¥ ²»ÄÜ°´ÕÕÉÏÊöÌõ¼şÀ´×ö.
 

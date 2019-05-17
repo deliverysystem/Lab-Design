@@ -4,9 +4,9 @@
 #include<stdio.h>
 #include<stdlib.h> 
 
-Menu* creatmenulist(){//初始化链表 
-	Menu *head;
-	head=(Menu*)malloc(sizeof(Menu));
+struct menu* creatmenulist(){//初始化链表 
+	struct menu *head;
+	head=(struct menu*)malloc(sizeof(struct menu));
 	if(head==NULL){
 		printf("内存不够，应终止程序"); 
 		return head;
@@ -16,13 +16,13 @@ Menu* creatmenulist(){//初始化链表
 }
 
 void addmenulist(int A,int object){//添加订单 
-	Menu *current=Rider[A].waitlist;
+	struct menu *current=rider[A].waitlist;
 	while(current->nextmenu!=NULL){//移动指针指向链表最后一个 
 		current=current->nextmenu;
 	}
 	current->nextmenu=&Menu[object];//将订单加入链表
 	current=current->nextmenu;
-	current->nextmenu=(Menu*)malloc(sizeof(Menu));//开创新的空间 
+	current->nextmenu=(struct menu*)malloc(sizeof(struct menu));//开创新的空间 
 	current->nextmenu=NULL;
 }
 
@@ -45,13 +45,13 @@ void buyrider(){//买骑手
 }
 
 void allocatemenu(int object){ //分配订单函数 
-	int i,minrider,sumrider=0;
+	int i,sumrider=0;
 	for(i=0;rider[i].exist!=0;i++){//判断有多少骑手 
 		sumrider++;
 	}
 	int time[sumrider];//每个骑手的时间 
 	for(i=0;rider[i].exist!=0;i++){
-		time[i]=rider[i].CalculatePath(&menu[object]); 
+		time[i]=rider[i].CalculatePath(&Menu[object]); 
 	}
 	int mintime,minrider;
 	mintime=time[0];
@@ -62,10 +62,10 @@ void allocatemenu(int object){ //分配订单函数
 			minrider=i;
 		}
 	}
-	menu(object).p=&rider[minrider];//明确订单被分配到那个骑手 
-	menu(object).underline=minrider; 
+	Menu[object].p=&rider[minrider];//明确订单被分配到那个骑手 
+	Menu[object].underline=minrider; 
 	addmenulist(minrider,object);//加入到骑手订单列表中 
-	AddTOWaitlist(&menu[object]);//加入到路径列表中 
+	rider[minrider].AddTOWaitlist(&Menu[object]);//加入到路径列表中 
 }
 
 void performance(){
@@ -77,19 +77,19 @@ void performance(){
 }
 
 void deletelist(int menunum){//订单送到时删除该订单 
-	Menu *tmp,*current,*previous;
-	current=rider[menu[menunum].underline].waitlist; 
-	for(;*current!=menu[menunum];current=current->nextmenu){//寻找到要删除的订单 
-		previous=current;
-	}
+	struct menu *tmp,*current,*previous;
+	current=rider[Menu[menunum].underline].waitlist; 
+//	for(;*current!=menu[menunum];current=current->nextmenu){//寻找到要删除的订单 
+//		previous=current;
+//	}
 	tmp=current;
 	current=current->nextmenu;
 	previous->nextmenu=current;
 	free(tmp);
 }
 
-Menu* The_ith(Rider *A,int i){////返回骑手订单列表第几个订单 
-	Menu *current=A->waitlist;
+struct menu* The_ith(Rider *A,int i){////返回骑手订单列表第几个订单 
+	struct menu *current=A->waitlist;
 	current=current->nextmenu;
 	int num;
 	for(num=1;current!=NULL&&num<=i;current=current->nextmenu,num++){}
@@ -101,9 +101,9 @@ Menu* The_ith(Rider *A,int i){////返回骑手订单列表第几个订单
 
 void destory(){//破产时调用？ 
 	int i;
-	Menu *tmp,*current;
+	struct menu *tmp,*current;
 	for(;rider[i].exist!=0;i++){//释放骑手订单链表 
-		current=rider[i].waitptr;
+		current=rider[i].waitlist;
 		while(current!=NULL){
 			tmp=current;
 			current=current->nextmenu;

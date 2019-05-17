@@ -69,7 +69,6 @@ class List{
 		      return *this;
 		}	  	 
 };
-
 void List::init(){
     header = new ListNode();
     tailer = new ListNode();
@@ -98,7 +97,7 @@ void List::clear()
 		while (header->next != tailer)
 			remove(header->next);
 }
-	
+
 void List::InsertAsl(ListNode* p)
 {
 		_size++;	
@@ -121,27 +120,23 @@ List::~List()
 }
 
 class Rider{
-  private:
-    int exist;
+  public:
     int x,y;
     point A(int x,int y);
-    Menu* waitlist;
     List Path,OldPath;
     int receive;//骑手的接单数
     int achieve;//骑手的完成数
     int overtime;//骑手超时数
-
-    //运动范围;
-
-  public:
     Rider() {}
     Rider(int x,int y):x(x),y(y) {}
-    int CalculatePath(Menu* newmenu);//试算送完最后一单的时间
+    int exist;
+    struct menu* waitlist;
+    int CalculatePath(struct menu* newmenu);//试算送完最后一单的时间
     int Manhatten(point x,point y);
     void GeneratePath(point A,int id);
-    void AddTOWaitlist(Menu* newmenu);//将新的订单添加进waitlist
+    void AddTOWaitlist(struct menu* newmenu);//将新的订单添加进waitlist
     ~Rider() {}
-    friend class menu;
+    //friend class Menu;
     friend class List;
 };
 

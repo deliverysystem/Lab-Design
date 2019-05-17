@@ -69,3 +69,80 @@ class List{
 		      return *this;
 		}	  	 
 };
+
+void List::init(){
+    header = new ListNode();
+    tailer = new ListNode();
+    header->next = tailer;
+    tailer->pred = header;
+    header->pred = NULL;
+    tailer->next = NULL;
+    _size = 0;
+}
+
+void List::copyNodes(ListNode* p, int n) { //O(n)
+        init(); //创建头、尾哨兵节点并做初始化
+        while (n--) { //将起自p的n项依次作为末节点插入
+            InsertAsl(p);
+            p = p->next;
+        }
+}
+
+List::List(List const& L){  
+        copyNodes( L.first(), L._size ); 
+}
+
+void List::clear()
+{
+		int oldSize = _size;
+		while (header->next != tailer)
+			remove(header->next);
+}
+	
+void List::InsertAsl(ListNode* p)
+{
+		_size++;	
+		tailer->insertAsPred(p->x,p->y,p->t);	
+}
+
+void List::remove(ListNode* p)
+{	
+	p->pred->next = p->next;
+	p->next->pred = p->pred;
+	_size--;
+	delete p;
+}
+
+List::~List()
+{
+		clear();   
+		delete header;
+		delete tailer;
+}
+
+class Rider{
+  private:
+    int exist;
+    int x,y;
+    point A(int x,int y);
+    Menu* waitlist;
+    List Path,OldPath;
+    int receive;//骑手的接单数
+    int achieve;//骑手的完成数
+    int overtime;//骑手超时数
+
+    //运动范围;
+
+  public:
+    Rider() {}
+    Rider(int x,int y):x(x),y(y) {}
+    int CalculatePath(Menu* newmenu);//试算送完最后一单的时间
+    int Manhatten(point x,point y);
+    void GeneratePath(point A,int id);
+    void AddTOWaitlist(Menu* newmenu);//将新的订单添加进waitlist
+    ~Rider() {}
+    friend class menu;
+    friend class List;
+};
+
+#endif

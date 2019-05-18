@@ -3,7 +3,7 @@
 #include"tools.h"
 #include"message.h"
 #include"controller.h" 
-void printmessage(Message a){
+void printmessage(struct message a){
 	SetCursorPosition(17,74);
 	printf("当前时刻：%d",sysclock);
 	printf("当前钱数：%d\n",a.messagemoney);

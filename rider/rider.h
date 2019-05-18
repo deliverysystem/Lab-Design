@@ -14,17 +14,17 @@ class Rider{
 		x=fx,y=fy;
 	};
     List Path,OldPath;
-    int receive;//ÆïÊÖµÄ½Óµ¥Êı
-    int achieve;//ÆïÊÖµÄÍê³ÉÊı
-    int overtime;//ÆïÊÖ³¬Ê±Êı
+    int receive;//éª‘æ‰‹çš„æ¥å•æ•°
+    int achieve;//éª‘æ‰‹çš„å®Œæˆæ•°
+    int overtime;//éª‘æ‰‹è¶…æ—¶æ•°
     Rider() {}
     Rider(int x,int y):x(x),y(y) {}
     int exist;
     struct menu* waitlist;
-    int CalculatePath(struct menu* newmenu);//ÊÔËãËÍÍê×îºóÒ»µ¥µÄÊ±¼ä
+    int CalculatePath(struct menu* newmenu);//è¯•ç®—é€å®Œæœ€åä¸€å•çš„æ—¶é—´
     int Manhatten(point* x,point* y);
     void GeneratePath(point* A,struct menu*,int t);
-    void AddTOWaitlist(struct menu* newmenu);//½«ĞÂµÄ¶©µ¥Ìí¼Ó½øwaitlist
+    void AddTOWaitlist(struct menu* newmenu);//å°†æ–°çš„è®¢å•æ·»åŠ è¿›waitlist
     ~Rider() {}
     //friend class Menu;
     friend class point;

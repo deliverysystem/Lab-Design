@@ -7,27 +7,27 @@ class List{
   	 	int _size; 
   	 	ListNode *header,*tailer;
   	
-  	 	void init();// ³õÊ¼»¯ÁĞ±í ÓĞÒ»¸öheader Ò»¸ötailer ¶¼Ã»ÓĞ¸³Öµ Ö»ÊÇÆğµ½Ò»¸öÍ·½ÚµãÎ²½ÚµãµÄ×÷ÓÃ
-  	 	void clear();// Çå¿Õ
+  	 	void init();// åˆå§‹åŒ–åˆ—è¡¨ æœ‰ä¸€ä¸ªheader ä¸€ä¸ªtailer éƒ½æ²¡æœ‰èµ‹å€¼ åªæ˜¯èµ·åˆ°ä¸€ä¸ªå¤´èŠ‚ç‚¹å°¾èŠ‚ç‚¹çš„ä½œç”¨
+  	 	void clear();// æ¸…ç©º
   	 	
  	
  	 	List() { init();}
-    	void copyNodes(ListNode* p, int n); //Õâ¸öÊÇÎªÁËÏÂÒ»¸öº¯Êı·şÎñµÄ
-		List(List const& L);//¹¹ÔìÁ´±íÊ±¿ÉÒÔÖ±½Ó¸´ÖÆÒ»¸öÁ´±íµ½ÁíÒ»¸öÁ´±íÀïÃæ
+    	void copyNodes(ListNode* p, int n); //è¿™ä¸ªæ˜¯ä¸ºäº†ä¸‹ä¸€ä¸ªå‡½æ•°æœåŠ¡çš„
+		List(List const& L);//æ„é€ é“¾è¡¨æ—¶å¯ä»¥ç›´æ¥å¤åˆ¶ä¸€ä¸ªé“¾è¡¨åˆ°å¦ä¸€ä¸ªé“¾è¡¨é‡Œé¢
     
 
 	 	~List();
-		 int size() const { return _size; } //·µ»ØÁ´±íµÄ´óĞ¡ µ÷ÓÃµÄÊ±ºò  len=Path.size()
-		 bool empty() const { return _size <= 0 ;}//Á´±íÊÇ·ñÎª¿Õ, ×¢Òâ Á´±íµÄheader ºÍ tailer ²»ËãÔÚsizeÀï
+		 int size() const { return _size; } //è¿”å›é“¾è¡¨çš„å¤§å° è°ƒç”¨çš„æ—¶å€™  len=Path.size()
+		 bool empty() const { return _size <= 0 ;}//é“¾è¡¨æ˜¯å¦ä¸ºç©º, æ³¨æ„ é“¾è¡¨çš„header å’Œ tailer ä¸ç®—åœ¨sizeé‡Œ
      		ListNode* first()  const{
         		return _size == 0 ? NULL : header->next;
     		}
      		ListNode* last() const{
         		return _size == 0 ? NULL : tailer->pred;
     		}
-	        void InsertAsl(ListNode* p);//²åÈëµ½×îºóÃæ 
-	        void remove(ListNode* p);// É¾³ı
-		List& operator =(const List& A)//¸³ÖµÔËËã·ûÖØÔØ  ÀıÈç AÊÇÒ»¸öList BÊÇÒ»¸öList  A=B ¾ÍÊÇ°ÑBÖ±½Ó¸³Öµ¸øA
+	        void InsertAsl(ListNode* p);//æ’å…¥åˆ°æœ€åé¢ 
+	        void remove(ListNode* p);// åˆ é™¤
+		List& operator =(const List& A)//èµ‹å€¼è¿ç®—ç¬¦é‡è½½  ä¾‹å¦‚ Aæ˜¯ä¸€ä¸ªList Bæ˜¯ä¸€ä¸ªList  A=B å°±æ˜¯æŠŠBç›´æ¥èµ‹å€¼ç»™A
 		{
 		      this->_size = A.size();
 		      ListNode* temp = A.first();

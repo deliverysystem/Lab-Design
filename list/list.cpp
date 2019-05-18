@@ -1,8 +1,11 @@
 #include "list.h"
-
+#include<stdio.h>
+#include<stdlib.h>
 void List::init(){
-    header = new ListNode();
-    tailer = new ListNode();
+    header = (ListNode*)malloc(sizeof(ListNode));
+    header->next=NULL;
+    tailer = (ListNode*)malloc(sizeof(ListNode));
+    tailer->next=NULL;
     header->next = tailer;
     tailer->pred = header;
     header->pred = NULL;
@@ -11,8 +14,8 @@ void List::init(){
 }
 
 void List::copyNodes(ListNode* p, int n) { //O(n)
-        init(); //´´½¨Í·¡¢Î²ÉÚ±ø½Úµã²¢×ö³õÊ¼»¯
-        while (n--) { //½«Æð×ÔpµÄnÏîÒÀ´Î×÷ÎªÄ©½Úµã²åÈë
+        init(); //åˆ›å»ºå¤´ã€å°¾å“¨å…µèŠ‚ç‚¹å¹¶åšåˆå§‹åŒ–
+        while (n--) { //å°†èµ·è‡ªpçš„né¡¹ä¾æ¬¡ä½œä¸ºæœ«èŠ‚ç‚¹æ’å…¥
             InsertAsl(p);
             p = p->next;
         }
@@ -49,4 +52,3 @@ List::~List()
 		delete header;
 		delete tailer;
 }
-

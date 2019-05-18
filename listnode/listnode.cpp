@@ -2,11 +2,11 @@
 
 ListNode* ListNode::insertAsPred(const int& x,const int& y,const int& t)
 {
-	ListNode *p = new ListNode(x,y,t, pred, this);    //¸üÐÂ4¸öÖ¸ÕëµÄÖ¸Ïò
+	ListNode *p = new ListNode(x,y,t, pred, this);    //æ›´æ–°4ä¸ªæŒ‡é’ˆçš„æŒ‡å‘
 	pred->next = p;
 	pred = p;
 	return p;
-}//²åÈëÒ»¸öÐÂ½Úµã£¬×÷Îªµ±Ç°½ÚµãµÄÇ°Çý£¬µ÷ÓÃ·½·¨  node->insertAsPred(x,y,t)
+}//æ’å…¥ä¸€ä¸ªæ–°èŠ‚ç‚¹ï¼Œä½œä¸ºå½“å‰èŠ‚ç‚¹çš„å‰é©±ï¼Œè°ƒç”¨æ–¹æ³•  node->insertAsPred(x,y,t)
 
 ListNode* ListNode::insertAsSucc(const int& x,const int& y,const int& t)
 {
@@ -14,4 +14,4 @@ ListNode* ListNode::insertAsSucc(const int& x,const int& y,const int& t)
 	next->next = p;
 	next = p;
 	return p;
-}//²åÈëÒ»¸öÐÂ½Úµã£¬×÷Îªµ±Ç°½ÚµãµÄºó¼Ì£¬µ÷ÓÃ·½·¨  node->insertAsSucc(x,y,t)
+}//æ’å…¥ä¸€ä¸ªæ–°èŠ‚ç‚¹ï¼Œä½œä¸ºå½“å‰èŠ‚ç‚¹çš„åŽç»§ï¼Œè°ƒç”¨æ–¹æ³•  node->insertAsSucc(x,y,t)

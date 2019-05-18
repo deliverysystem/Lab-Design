@@ -9,17 +9,18 @@
 #include<stdlib.h>
 #include <windows.h>
 //全局变量： 
-int sysclock=1;
+int sysclock=0;
 int money=1000;
 struct menu *Menu=(struct menu*)calloc(1,sizeof(struct menu));	//订单动态数组 
 Rider *rider=(Rider*)calloc(2,sizeof(Rider));	//骑手动态数组 
+
 void start()
 {
 	//SetWindowSize(120,80);			//原图为78*51 
 	//限定骑手起始位置
 	rider[0].exist=1;
 	rider[1].exist=0;
-	rider[0].changeposi(17,34);		//x,y具体待补充 ,rider[i].A.changeposi(x,y);
+	rider[0].changeposi(8,8);		//x,y具体待补充 ,rider[i].A.changeposi(x,y);
 	int boolnumber=0;				//判断是否破产使用 
 	int j=0;			
 	int number=0;		//读文件中的序号 
@@ -29,6 +30,7 @@ void start()
 	Map a;
 	a.init();		//绘制地图
 	//初始化message
+	SetCursorPosition(40,0); 
 	struct message Message;
 	Message.messagemoney=money;
 	Message.accomplish=0;		//完成数 
@@ -45,7 +47,7 @@ void start()
 		buyrider();														
 		//3、读文件并分配订单 
 		for(;sysclock==righttime&&(!feof(fw));){			//判断是否到达接单时刻且文件没有读完 
-			if(sysclock==1){
+			if(sysclock==0){
 				fscanf(fw,"%d",&number);
 				fscanf(fw,"%d",&righttime);
 			}
@@ -65,11 +67,11 @@ void start()
 			fscanf(fw,"%d",&Menu[size].x2);
 			fscanf(fw,"%d",&Menu[size].y2);
 			Menu[size].endtime=righttime+30;
-			//坐标变换
+			/*//坐标变换
 			Menu[size].x1=2*Menu[size].x1+1;
 			Menu[size].y1=4*Menu[size].y1+2;
 			Menu[size].x2=2*Menu[size].x2+1;
-			Menu[size].y2=4*Menu[size].y2+2;				
+			Menu[size].y2=4*Menu[size].y2+2;*/				
 			size++;											
 			Message.sum+=1;					//接单数+1
 			//4、分配订单 
@@ -122,10 +124,10 @@ void start()
 		}
 		if(j==size)
 			break; 			//订单数组中的所有订单都完成了，跳出循环。	
-		Sleep(1000); 
+		Sleep(10000); 
 	}
 	fclose(fw);			//关闭文件
-	SetWindowSize(75,75);	
+	SetWindowSize(100,100);	
 }
   
 int bankruptcy(int money)   //判断当前是否破产 
@@ -139,7 +141,10 @@ int bankruptcy(int money)   //判断当前是否破产
 	else
 		return 1;
 }
-void printmove(){
+
+
+void printmove()
+{
 	int i;
 	int m;
 	int n;
@@ -152,9 +157,9 @@ void printmove(){
 			rider[i].Path.header=rider[i].Path.header->next->next;
 			rider[i].Path.header->pred=rider[i].Path.header;			
 			free(temp);															
-			a.changeposi(rider[i].x,rider[i].y);
+			a.changeposi(2*rider[i].x+1,4*rider[i].y+2);
 			a.clear();         				//清除骑手原位置 
-			a.changeposi(m,n);
+			a.changeposi(2*m+1,4*n+2);
 			a.PrintRider();  				//打印骑手图案函数
 			rider[i].changeposi(m,n);
 		}

@@ -11,3 +11,4 @@ void printmessage(struct message a){
 	printf("完成数：%d\n",a.accomplish);
 	printf("超时数：%d\n",a.totalovertime);
 }
+

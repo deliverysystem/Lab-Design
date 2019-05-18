@@ -8,50 +8,50 @@
 #include"menu.h" 
 #include<stdlib.h>
 #include <windows.h>
-//È«¾Ö±äÁ¿£º 
+//å…¨å±€å˜é‡ï¼š 
 int sysclock=1;
 int money=1000;
-struct menu *Menu=(struct menu*)calloc(1,sizeof(struct menu));	//¶©µ¥¶¯Ì¬Êı×é 
-Rider *rider=(Rider*)calloc(2,sizeof(Rider));	//ÆïÊÖ¶¯Ì¬Êı×é 
+struct menu *Menu=(struct menu*)calloc(1,sizeof(struct menu));	//è®¢å•åŠ¨æ€æ•°ç»„ 
+Rider *rider=(Rider*)calloc(2,sizeof(Rider));	//éª‘æ‰‹åŠ¨æ€æ•°ç»„ 
 void start()
 {
-	SetWindowSize(120,80);			//Ô­Í¼Îª78*51 
-	//ÏŞ¶¨ÆïÊÖÆğÊ¼Î»ÖÃ
+	//SetWindowSize(120,80);			//åŸå›¾ä¸º78*51 
+	//é™å®šéª‘æ‰‹èµ·å§‹ä½ç½®
 	rider[0].exist=1;
 	rider[1].exist=0;
-	rider[0].changeposi(22,38);		//x,y¾ßÌå´ı²¹³ä ,rider[i].A.changeposi(x,y);
-	int boolnumber=0;				//ÅĞ¶ÏÊÇ·ñÆÆ²úÊ¹ÓÃ 
+	rider[0].changeposi(17,34);		//x,yå…·ä½“å¾…è¡¥å…… ,rider[i].A.changeposi(x,y);
+	int boolnumber=0;				//åˆ¤æ–­æ˜¯å¦ç ´äº§ä½¿ç”¨ 
 	int j=0;			
-	int number=0;		//¶ÁÎÄ¼şÖĞµÄĞòºÅ 
-	int size=0;      //¿ØÖÆ¶©µ¥Êı×éµÄ´óĞ¡ 
-	int righttime=0;   //ÅĞ¶ÏÊÇ·ñµ½´ï½Óµ¥Ê±¿Ì 
+	int number=0;		//è¯»æ–‡ä»¶ä¸­çš„åºå· 
+	int size=0;      //æ§åˆ¶è®¢å•æ•°ç»„çš„å¤§å° 
+	int righttime=0;   //åˆ¤æ–­æ˜¯å¦åˆ°è¾¾æ¥å•æ—¶åˆ» 
 	int value=1;
 	Map a;
-	a.init();		//»æÖÆµØÍ¼
-	//³õÊ¼»¯message
+	a.init();		//ç»˜åˆ¶åœ°å›¾
+	//åˆå§‹åŒ–message
 	struct message Message;
 	Message.messagemoney=money;
-	Message.accomplish=0;		//Íê³ÉÊı 
-	Message.totalovertime=0;			//³¬Ê±Êı 
-	Message.sum=0;				//½Óµ¥Êı 
-	FILE *fw=fopen("seles.txt","r"); //´ò¿ªÎÄ¼ş 
-	for(;value==1;sysclock++){	 			//´óÑ­»·£¬¿ØÖÆÕû¸ö½ø³Ì 
+	Message.accomplish=0;		//å®Œæˆæ•° 
+	Message.totalovertime=0;			//è¶…æ—¶æ•° 
+	Message.sum=0;				//æ¥å•æ•° 
+	FILE *fw=fopen("seles.txt","r"); //æ‰“å¼€æ–‡ä»¶ 
+	for(;value==1;sysclock++){	 			//å¤§å¾ªç¯ï¼Œæ§åˆ¶æ•´ä¸ªè¿›ç¨‹ 
 
-		//1¡¢ÅĞ¶ÏÊÇ·ñÆÆ²ú 
+		//1ã€åˆ¤æ–­æ˜¯å¦ç ´äº§ 
 		boolnumber=bankruptcy(money);	
 		if(boolnumber==0)
 			break;
-		//2¡¢ÂòÆïÊÖµÄº¯Êı
+		//2ã€ä¹°éª‘æ‰‹çš„å‡½æ•°
 		buyrider();														
-		//3¡¢¶ÁÎÄ¼ş²¢·ÖÅä¶©µ¥ 
-		for(;sysclock==righttime&&(!feof(fw));){			//ÅĞ¶ÏÊÇ·ñµ½´ï½Óµ¥Ê±¿ÌÇÒÎÄ¼şÃ»ÓĞ¶ÁÍê 
+		//3ã€è¯»æ–‡ä»¶å¹¶åˆ†é…è®¢å• 
+		for(;sysclock==righttime&&(!feof(fw));){			//åˆ¤æ–­æ˜¯å¦åˆ°è¾¾æ¥å•æ—¶åˆ»ä¸”æ–‡ä»¶æ²¡æœ‰è¯»å®Œ 
 			if(sysclock==1){
 				fscanf(fw,"%d",&number);
 				fscanf(fw,"%d",&righttime);
 			}
 			if(size!=0){
-				Menu=(struct menu*)realloc(Menu,(size+1)*sizeof(struct menu));	//½«¶©µ¥Êı×éµÄ´óĞ¡¼ÓÒ» 
-				Menu[size].x1=0;						//³õÊ¼»¯ĞÂÔö¼ÓµÄ¶©µ¥ 
+				Menu=(struct menu*)realloc(Menu,(size+1)*sizeof(struct menu));	//å°†è®¢å•æ•°ç»„çš„å¤§å°åŠ ä¸€ 
+				Menu[size].x1=0;						//åˆå§‹åŒ–æ–°å¢åŠ çš„è®¢å• 
 				Menu[size].y1=0;
 				Menu[size].x2=0;
 				Menu[size].y2=0;
@@ -65,15 +65,15 @@ void start()
 			fscanf(fw,"%d",&Menu[size].x2);
 			fscanf(fw,"%d",&Menu[size].y2);
 			Menu[size].endtime=righttime+30;
-			//×ø±ê±ä»»
-			Menu[size].x1=3*Menu[size].x1+1;
-			Menu[size].y1=4.5*Menu[size].y1+2;
-			Menu[size].x2=3*Menu[size].x2+1;
-			Menu[size].y2=4.5*Menu[size].y2+2;				
+			//åæ ‡å˜æ¢
+			Menu[size].x1=2*Menu[size].x1+1;
+			Menu[size].y1=4*Menu[size].y1+2;
+			Menu[size].x2=2*Menu[size].x2+1;
+			Menu[size].y2=4*Menu[size].y2+2;				
 			size++;											
-			Message.sum+=1;					//½Óµ¥Êı+1
-			//4¡¢·ÖÅä¶©µ¥ 
-			allocatemenu(size-1);		//size-1Îª´Ë¿ÌĞÂ½Ó¶©µ¥ÔÚ¶©µ¥Êı×éÖĞµÄÏÂ±ê 
+			Message.sum+=1;					//æ¥å•æ•°+1
+			//4ã€åˆ†é…è®¢å• 
+			allocatemenu(size-1);		//size-1ä¸ºæ­¤åˆ»æ–°æ¥è®¢å•åœ¨è®¢å•æ•°ç»„ä¸­çš„ä¸‹æ ‡ 
 			if(feof(fw)==0){
 				fscanf(fw,"%d",&number);
 				fscanf(fw,"%d",&righttime);	
@@ -81,26 +81,26 @@ void start()
 			if(feof(fw)!=0)
 				break;
 		}								
-		//5¡¢ÅĞ¶ÏÊÇ·ñµ½´ïËÍ²Íµã£¬ÅĞ¶ÏÊÇ·ñ³¬Ê±,²ÉÓÃ±éÀú¶©µ¥µÄ·½·¨ 
+		//5ã€åˆ¤æ–­æ˜¯å¦åˆ°è¾¾é€é¤ç‚¹ï¼Œåˆ¤æ–­æ˜¯å¦è¶…æ—¶,é‡‡ç”¨éå†è®¢å•çš„æ–¹æ³• 
 		for(j=0;j<size;j++){				
-			if(((Menu[j].x1-3)==(Menu[j].p)->x&&Menu[j].y1==(Menu[j].p)->y)||(Menu[j].x1==(Menu[j].p)->x&&(Menu[j].y1+5)==(Menu[j].p)->y)||(Menu[j].x1==(Menu[j].p)->x&&(Menu[j].y1-4)==(Menu[j].p)->y)||((Menu[j].x1+3)==(Menu[j].p)->x&&(Menu[j].y1)==(Menu[j].p)->y)&&Menu[j].get==0){ //ÆïÊÖµ½´ï½Ó²ÍµØ 
+			if(((Menu[j].x1-2)==(Menu[j].p)->x&&Menu[j].y1==(Menu[j].p)->y)||(Menu[j].x1==(Menu[j].p)->x&&(Menu[j].y1+4)==(Menu[j].p)->y)||(Menu[j].x1==(Menu[j].p)->x&&(Menu[j].y1-4)==(Menu[j].p)->y)||((Menu[j].x1+2)==(Menu[j].p)->x&&(Menu[j].y1)==(Menu[j].p)->y)&&Menu[j].get==0){ //éª‘æ‰‹åˆ°è¾¾æ¥é¤åœ° 
 				Menu[j].get=1;
 			}
-			if(((Menu[j].x2-3)==(Menu[j].p)->x&&Menu[j].y2==(Menu[j].p)->y)||(Menu[j].x2==(Menu[j].p)->x&&(Menu[j].y2+5)==(Menu[j].p)->y)||(Menu[j].x2==(Menu[j].p)->x&&(Menu[j].y2-4)==(Menu[j].p)->y)||((Menu[j].x2+3)==(Menu[j].p)->x&&(Menu[j].y2)==(Menu[j].p)->y)&&Menu[j].get==1){	//ÆïÊÖµ½´ïËÍ²ÍµØ 
-				if(sysclock-Menu[j].endtime>=60){		//ÆÆ²ú 
+			if(((Menu[j].x2-2)==(Menu[j].p)->x&&Menu[j].y2==(Menu[j].p)->y)||(Menu[j].x2==(Menu[j].p)->x&&(Menu[j].y2+4)==(Menu[j].p)->y)||(Menu[j].x2==(Menu[j].p)->x&&(Menu[j].y2-4)==(Menu[j].p)->y)||((Menu[j].x2+2)==(Menu[j].p)->x&&(Menu[j].y2)==(Menu[j].p)->y)&&Menu[j].get==1){	//éª‘æ‰‹åˆ°è¾¾é€é¤åœ° 
+				if(sysclock-Menu[j].endtime>=60){		//ç ´äº§ 
 					money=-100;
 					boolnumber=bankruptcy(money);
 					if(boolnumber==0)	
 						break;
 				}
-				else if(sysclock-Menu[j].endtime>=30){	//³¬Ê±·£¿î50,³¬Ê±Êı+1 
+				else if(sysclock-Menu[j].endtime>=30){	//è¶…æ—¶ç½šæ¬¾50,è¶…æ—¶æ•°+1 
 					money-=50;
 					Message.totalovertime+=1;
 					Menu[j].reach=1;
 					Menu[j].p->overtime+=1;
 			 		deletelist(j);
 				}
-				else{						//ËÍ²Í³É¹¦£¬Ç®Êı¼Ó10,Íê³ÉÊı+1 
+				else{						//é€é¤æˆåŠŸï¼Œé’±æ•°åŠ 10,å®Œæˆæ•°+1 
 					money+=10;
 					Message.accomplish+=1;
 					Menu[j].reach=1;
@@ -111,28 +111,28 @@ void start()
 		}
 		if(boolnumber==0)
 			break;
-		//6¡¢¶ÔÆïÊÖ½øĞĞÒÆ¶¯
+		//6ã€å¯¹éª‘æ‰‹è¿›è¡Œç§»åŠ¨
 		printmove();
-		//7¡¢´òÓ¡µ±Ç°ĞÅÏ¢ 
+		//7ã€æ‰“å°å½“å‰ä¿¡æ¯ 
 		printmessage(Message);
-		//8¡¢Èç¹ûËùÓĞ¶©µ¥Íê³É£¬Ìø³öÑ­»·
+		//8ã€å¦‚æœæ‰€æœ‰è®¢å•å®Œæˆï¼Œè·³å‡ºå¾ªç¯
 		for(j=0;j<size;j++){
 			if(Menu[j].reach==0)
 			 	break;
 		}
 		if(j==size)
-			break; 			//¶©µ¥Êı×éÖĞµÄËùÓĞ¶©µ¥¶¼Íê³ÉÁË£¬Ìø³öÑ­»·¡£	
+			break; 			//è®¢å•æ•°ç»„ä¸­çš„æ‰€æœ‰è®¢å•éƒ½å®Œæˆäº†ï¼Œè·³å‡ºå¾ªç¯ã€‚	
 		Sleep(1000); 
 	}
-	fclose(fw);			//¹Ø±ÕÎÄ¼ş
-	SetWindowSize(75,0);	
+	fclose(fw);			//å…³é—­æ–‡ä»¶
+	SetWindowSize(75,75);	
 }
   
-int bankruptcy(int money)   //ÅĞ¶Ïµ±Ç°ÊÇ·ñÆÆ²ú 
+int bankruptcy(int money)   //åˆ¤æ–­å½“å‰æ˜¯å¦ç ´äº§ 
 {
 	int i;
 	if(money<0){
-		SetCursorPosition(58,0);
+		SetCursorPosition(40,0);
 		performance();		
 		return 0;
 	}
@@ -145,16 +145,18 @@ void printmove(){
 	int n;
 	point a; 
 	for(i=0;rider[i].exist==1;i++){
-		m=rider[i].Path.header->next->x;				//rider[i]µÄĞĞÊ»Â·ÏßÖĞµÄÏÂ¸öÒ»µã£¬¶Á³öËüµÄ×ø±ê 
-		n=rider[i].Path.header->next->y;
-		ListNode* temp=rider[i].Path.header->next;					//É¾³ıµÚÒ»¸ö½Úµã 
-		rider[i].Path.header=rider[i].Path.header->next->next;
-		rider[i].Path.header->pred=rider[i].Path.header;			
-		free(temp);															
-		a.changeposi(rider[i].x,rider[i].y);
-		a.clear();         				//Çå³ıÆïÊÖÔ­Î»ÖÃ 
-		a.changeposi(m,n);
-		a.PrintRider();  				//´òÓ¡ÆïÊÖÍ¼°¸º¯Êı
-		rider[i].changeposi(m,n);
+		if((rider[i].Path.header->next)!=NULL){
+			m=rider[i].Path.header->next->x;				//rider[i]çš„è¡Œé©¶è·¯çº¿ä¸­çš„ä¸‹ä¸ªä¸€ç‚¹ï¼Œè¯»å‡ºå®ƒçš„åæ ‡ 
+			n=rider[i].Path.header->next->y;
+			ListNode* temp=rider[i].Path.header->next;					//åˆ é™¤ç¬¬ä¸€ä¸ªèŠ‚ç‚¹ 
+			rider[i].Path.header=rider[i].Path.header->next->next;
+			rider[i].Path.header->pred=rider[i].Path.header;			
+			free(temp);															
+			a.changeposi(rider[i].x,rider[i].y);
+			a.clear();         				//æ¸…é™¤éª‘æ‰‹åŸä½ç½® 
+			a.changeposi(m,n);
+			a.PrintRider();  				//æ‰“å°éª‘æ‰‹å›¾æ¡ˆå‡½æ•°
+			rider[i].changeposi(m,n);
+		}
 	}
 }

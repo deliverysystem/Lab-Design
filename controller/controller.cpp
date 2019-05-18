@@ -124,7 +124,7 @@ void start()
 		}
 		if(j==size)
 			break; 			//订单数组中的所有订单都完成了，跳出循环。	
-		Sleep(10000); 
+		Sleep(1000); 
 	}
 	fclose(fw);			//关闭文件
 	SetWindowSize(100,100);	
@@ -150,12 +150,13 @@ void printmove()
 	int n;
 	point a; 
 	for(i=0;rider[i].exist==1;i++){
-		if((rider[i].Path.header->next)!=NULL){
+		if(rider[i].Path.header->next!=rider[i].Path.tailer){
 			m=rider[i].Path.header->next->x;				//rider[i]的行驶路线中的下个一点，读出它的坐标 
 			n=rider[i].Path.header->next->y;
+			//if(rider[i].Path.header)
 			ListNode* temp=rider[i].Path.header->next;					//删除第一个节点 
-			rider[i].Path.header=rider[i].Path.header->next->next;
-			rider[i].Path.header->pred=rider[i].Path.header;			
+			rider[i].Path.header->next=rider[i].Path.header->next->next;
+			rider[i].Path.header->next->pred=rider[i].Path.header;			
 			free(temp);															
 			a.changeposi(2*rider[i].x+1,4*rider[i].y+2);
 			a.clear();         				//清除骑手原位置 

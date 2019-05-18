@@ -4,52 +4,56 @@
 #include<stdio.h>
 #include<stdlib.h> 
 
-struct menu* creatmenulist(){//³õÊ¼»¯Á´±í 
+struct menu* creatmenulist(){//åˆå§‹åŒ–é“¾è¡¨ 
 	struct menu *head;
 	head=(struct menu*)malloc(sizeof(struct menu));
 	if(head==NULL){
-		printf("ÄÚ´æ²»¹»£¬Ó¦ÖÕÖ¹³ÌĞò"); 
+		printf("å†…å­˜ä¸å¤Ÿï¼Œåº”ç»ˆæ­¢ç¨‹åº"); 
 		return head;
 	} 
 	head->nextmenu=NULL;
 	return head;
 }
 
-void addmenulist(int A,int object){//Ìí¼Ó¶©µ¥ 
+void addmenulist(int A,int object){//æ·»åŠ è®¢å• 
 	struct menu *current=rider[A].waitlist;
-	while(current->nextmenu!=NULL){//ÒÆ¶¯Ö¸ÕëÖ¸ÏòÁ´±í×îºóÒ»¸ö 
+	while(current->nextmenu!=NULL){//ç§»åŠ¨æŒ‡é’ˆæŒ‡å‘é“¾è¡¨æœ€åä¸€ä¸ª 
 		current=current->nextmenu;
 	}
-	current->nextmenu=&Menu[object];//½«¶©µ¥¼ÓÈëÁ´±í
+	current->nextmenu=&Menu[object];//å°†è®¢å•åŠ å…¥é“¾è¡¨
 	current=current->nextmenu;
-	current->nextmenu=(struct menu*)malloc(sizeof(struct menu));//¿ª´´ĞÂµÄ¿Õ¼ä 
+	current->nextmenu=(struct menu*)malloc(sizeof(struct menu));//å¼€åˆ›æ–°çš„ç©ºé—´ 
 	current->nextmenu=NULL;
 }
 
-void buyrider(){//ÂòÆïÊÖ
+void buyrider(){//ä¹°éª‘æ‰‹
 	int i;
-	while(money>=350){//´óÓÚ400ÊÇÎªÁËÁôÒ»¶Î»º³å£¬·ÀÖ¹ÂòÍêÆïÊÖÃ»Ç®µ¼ÖÂÆÆ²ú 
-		for(i=0;rider[i].exist==1;i++){};//ÅĞ¶ÏÄÄĞ©ÆïÊÖ´æÔÚ
+	while(money>=350){//å¤§äº400æ˜¯ä¸ºäº†ç•™ä¸€æ®µç¼“å†²ï¼Œé˜²æ­¢ä¹°å®Œéª‘æ‰‹æ²¡é’±å¯¼è‡´ç ´äº§ 
+		for(i=0;rider[i].exist==1;i++){};//åˆ¤æ–­å“ªäº›éª‘æ‰‹å­˜åœ¨
 		rider=(Rider*)realloc(rider,(i+2)*sizeof(Rider)); 
 		rider[i].exist=1;
 		rider[i+1].exist=0;
-		if(i==1){//³õÊ¼»¯,Ê¹nextmenuptr³ÉÎªÃ¿¸öÆïÊÖ¶©µ¥Á´±íµÄÍ·Ö¸Õë 
+		if(i==1){//åˆå§‹åŒ–,ä½¿nextmenuptræˆä¸ºæ¯ä¸ªéª‘æ‰‹è®¢å•é“¾è¡¨çš„å¤´æŒ‡é’ˆ 
 			rider[0].waitlist=creatmenulist();
 			rider[i].waitlist=creatmenulist();
+			rider[i].x=8;
+			rider[i].y=8;
 		}
 		else{ 
 			rider[i].waitlist=creatmenulist();
+			rider[i].x=8;
+			rider[i].y=8;
 		}
 		money=money-300;
 	}
 }
 
-void allocatemenu(int object){ //·ÖÅä¶©µ¥º¯Êı 
+void allocatemenu(int object){ //åˆ†é…è®¢å•å‡½æ•° 
 	int i,sumrider=0;
-	for(i=0;rider[i].exist!=0;i++){//ÅĞ¶ÏÓĞ¶àÉÙÆïÊÖ 
+	for(i=0;rider[i].exist!=0;i++){//åˆ¤æ–­æœ‰å¤šå°‘éª‘æ‰‹ 
 		sumrider++;
 	}
-	int time[sumrider];//Ã¿¸öÆïÊÖµÄÊ±¼ä 
+	int time[sumrider];//æ¯ä¸ªéª‘æ‰‹çš„æ—¶é—´ 
 	for(i=0;rider[i].exist!=0;i++){
 		time[i]=rider[i].CalculatePath(&Menu[object]); 
 	}
@@ -62,24 +66,24 @@ void allocatemenu(int object){ //·ÖÅä¶©µ¥º¯Êı
 			minrider=i;
 		}
 	}
-	Menu[object].p=&rider[minrider];//Ã÷È·¶©µ¥±»·ÖÅäµ½ÄÇ¸öÆïÊÖ 
+	Menu[object].p=&rider[minrider];//æ˜ç¡®è®¢å•è¢«åˆ†é…åˆ°é‚£ä¸ªéª‘æ‰‹ 
 	Menu[object].underline=minrider; 
-	addmenulist(minrider,object);//¼ÓÈëµ½ÆïÊÖ¶©µ¥ÁĞ±íÖĞ 
-	rider[minrider].AddTOWaitlist(&Menu[object]);//¼ÓÈëµ½Â·¾¶ÁĞ±íÖĞ 
+	addmenulist(minrider,object);//åŠ å…¥åˆ°éª‘æ‰‹è®¢å•åˆ—è¡¨ä¸­ 
+	rider[minrider].AddTOWaitlist(&Menu[object]);//åŠ å…¥åˆ°è·¯å¾„åˆ—è¡¨ä¸­ 
 }
 
 void performance(){
 	int i;
 	for(i=0;rider[i].exist!=0;i++){
-		printf("%dºÅÆïÊÖ½Óµ¥Êı%d Íê³ÉÊı%d ³¬Ê±Êı%d\n",i,rider[i].receive,rider[i].achieve,rider[i].overtime);
+		printf("%då·éª‘æ‰‹æ¥å•æ•°%d å®Œæˆæ•°%d è¶…æ—¶æ•°%d\n",i,rider[i].receive,rider[i].achieve,rider[i].overtime);
 
 	}
 }
 
-void deletelist(int menunum){//¶©µ¥ËÍµ½Ê±É¾³ı¸Ã¶©µ¥ 
+void deletelist(int menunum){//è®¢å•é€åˆ°æ—¶åˆ é™¤è¯¥è®¢å• 
 	struct menu *tmp,*current,*previous;
 	current=rider[Menu[menunum].underline].waitlist; 
-//	for(;*current!=menu[menunum];current=current->nextmenu){//Ñ°ÕÒµ½ÒªÉ¾³ıµÄ¶©µ¥ 
+//	for(;*current!=menu[menunum];current=current->nextmenu){//å¯»æ‰¾åˆ°è¦åˆ é™¤çš„è®¢å• 
 //		previous=current;
 //	}
 	tmp=current;
@@ -88,21 +92,23 @@ void deletelist(int menunum){//¶©µ¥ËÍµ½Ê±É¾³ı¸Ã¶©µ¥
 	free(tmp);
 }
 
-struct menu* The_ith(Rider *A,int i){////·µ»ØÆïÊÖ¶©µ¥ÁĞ±íµÚ¼¸¸ö¶©µ¥ 
+struct menu* The_ith(Rider *A,int i){////è¿”å›éª‘æ‰‹è®¢å•åˆ—è¡¨ç¬¬å‡ ä¸ªè®¢å• 
 	struct menu *current=A->waitlist;
 	current=current->nextmenu;
 	int num;
 	for(num=1;current!=NULL&&num<=i;current=current->nextmenu,num++){}
 	if(num==i)
 		return current;
+	else if(i==0)
+		return A->waitlist;
 	else
 		return NULL;
 }
 
-void destory(){//ÆÆ²úÊ±µ÷ÓÃ£¿ 
+void destory(){//ç ´äº§æ—¶è°ƒç”¨ï¼Ÿ 
 	int i;
 	struct menu *tmp,*current;
-	for(;rider[i].exist!=0;i++){//ÊÍ·ÅÆïÊÖ¶©µ¥Á´±í 
+	for(;rider[i].exist!=0;i++){//é‡Šæ”¾éª‘æ‰‹è®¢å•é“¾è¡¨ 
 		current=rider[i].waitlist;
 		while(current!=NULL){
 			tmp=current;

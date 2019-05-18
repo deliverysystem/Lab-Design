@@ -9,8 +9,8 @@ public:
 	int getY() {return this->y;};
 	void clear();
 	void PrintRider();
-	void PrintCanteen();//´òÓ¡²ÍÌü
-	void PrintResidence();//´òÓ¡×¡Ëù
+	void PrintCanteen();//â€²Ã²Ã³?2Ã­Ã¬Ã¼
+	void PrintResidence();//â€²Ã²Ã³?Ã—??Ã¹
 	void changeposi(int fx,int fy){
 		x=fx,y=fy;
 	};

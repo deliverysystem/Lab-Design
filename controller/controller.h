@@ -2,9 +2,9 @@
 #define CONTROLLER_H
 #include"menu.h"
 #include"rider.h"
-extern int bankruptcy(int );//ÅĞ¶ÏÊÇ·ñÆÆ²ú 
-extern void printmove();//¶ÔÆïÊÖ½øĞĞÒÆ¶¯ 
+extern int bankruptcy(int );//åˆ¤æ–­æ˜¯å¦ç ´äº§ 
 extern void start();
+extern void printmove();//å¯¹éª‘æ‰‹è¿›è¡Œç§»åŠ¨ 
 
 extern int sysclock;
 extern int money;

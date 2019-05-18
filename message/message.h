@@ -3,10 +3,10 @@
 
 struct message
 {
-	int messagemoney;    //µ±Ç°Ç®Êı 
- 	int sum;	  //½Óµ¥Êı 
- 	int accomplish;//Íê³ÉÊı 
- 	int totalovertime;//³¬Ê±Êı 
+	int messagemoney;    //å½“å‰é’±æ•° 
+ 	int sum;	  //æ¥å•æ•° 
+ 	int accomplish;//å®Œæˆæ•° 
+ 	int totalovertime;//è¶…æ—¶æ•° 
 };
 
 extern void printmessage(struct message);

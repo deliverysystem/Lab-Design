@@ -2,11 +2,12 @@
 #include"point.h"
 #include"tools.h"
 #include"message.h"
-void printmessage(struct message a){
-	int i;
-	SetCursorPosition(52,0);
-	printf("µ±Ç°Ç®Êı£º%d\n",a.messagemoney);
-	printf("½Óµ¥Êı£º%d\n",a.sum);
-	printf("Íê³ÉÊı£º%d\n",a.accomplish);
-	printf("³¬Ê±Êı£º%d\n",a.totalovertime);
+#include"controller.h" 
+void printmessage(Message a){
+	SetCursorPosition(17,74);
+	printf("å½“å‰æ—¶åˆ»ï¼š%d",sysclock);
+	printf("å½“å‰é’±æ•°ï¼š%d\n",a.messagemoney);
+	printf("æ¥å•æ•°ï¼š%d\n",a.sum);
+	printf("å®Œæˆæ•°ï¼š%d\n",a.accomplish);
+	printf("è¶…æ—¶æ•°ï¼š%d\n",a.totalovertime);
 }

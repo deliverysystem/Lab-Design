@@ -1,22 +1,22 @@
 #include "tools.h"
 #include <windows.h>
 #include <stdio.h>
-void SetWindowSize(int cols, int lines)//ÉèÖÃ´°¿Ú´óĞ¡
+void SetWindowSize(int cols, int lines)//è®¾ç½®çª—å£å¤§å°
 {
-    system("title ÍâÂôÅÉµ¥Ä£ÄâÏµÍ³");//ÉèÖÃ´°¿Ú±êÌâ
+    system("title å¤–å–æ´¾å•æ¨¡æ‹Ÿç³»ç»Ÿ");//è®¾ç½®çª—å£æ ‡é¢˜
     char cmd[30];
     sprintf(cmd, "mode con cols=%d lines=%d", cols, lines);
-    system(cmd);//ÉèÖÃ´°¿Ú¿í¶ÈºÍ¸ß¶È
+    system(cmd);//è®¾ç½®çª—å£å®½åº¦å’Œé«˜åº¦
 }
-void SetCursorPosition(const int x, const int y)//ÉèÖÃ¹â±êÎ»ÖÃ
+void SetCursorPosition(const int x, const int y)//è®¾ç½®å…‰æ ‡ä½ç½®
 {
     COORD position;
-	position.X = x;	 
-   	position.Y = y;
+	position.Y = x;	 
+   	position.X = y;
     SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE), position);
 }
 
-void SetColor(int colorID)//ÉèÖÃÎÄ±¾ÑÕÉ«
+void SetColor(int colorID)//è®¾ç½®æ–‡æœ¬é¢œè‰²
 {
     SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), colorID);
 }

@@ -7,24 +7,24 @@
 #include"rider.h"
 class Rider;
 	struct menu{
-			int x1;//ÆïÊÖ½Ó²ÍµØÖ·ºá×ø±ê
-			int y1;//ÆïÊÖ½Ó²ÍµØÖ·×İ×ø±ê
-			int x2;//ÆïÊÖËÍ²ÍµØÖ·ºá×ø±ê
-			int y2;//ÆïÊÖËÍ²ÍµØÖ·×İ×ø±ê	
-			int endtime;//ÕâÒ»µ¥½ØÖ¹µÄÊ±¼ä 
-			Rider *p;//Ö¸ÏòÆïÊÖµÄÖ¸Õë
-			int underline;//Ö¸ÏòÆïÊÖµÄÏÂ±ê 
-			int get;//ÅĞ¶ÏÆïÊÖÊÇ·ñÈ¡²Í 
-			int reach;//ÅĞ¶ÏÆïÊÖÊÇ·ñËÍµ½¶©²Í 
+			int x1;//éª‘æ‰‹æ¥é¤åœ°å€æ¨ªåæ ‡
+			int y1;//éª‘æ‰‹æ¥é¤åœ°å€çºµåæ ‡
+			int x2;//éª‘æ‰‹é€é¤åœ°å€æ¨ªåæ ‡
+			int y2;//éª‘æ‰‹é€é¤åœ°å€çºµåæ ‡	
+			int endtime;//è¿™ä¸€å•æˆªæ­¢çš„æ—¶é—´ 
+			Rider *p;//æŒ‡å‘éª‘æ‰‹çš„æŒ‡é’ˆ
+			int underline;//æŒ‡å‘éª‘æ‰‹çš„ä¸‹æ ‡ 
+			int get;//åˆ¤æ–­éª‘æ‰‹æ˜¯å¦å–é¤ 
+			int reach;//åˆ¤æ–­éª‘æ‰‹æ˜¯å¦é€åˆ°è®¢é¤ 
 			struct menu *nextmenu;
 		};
 	
-	void buyrider();//ÂòÆïÊÖ
-	void allocatemenu(int); //·ÖÅä¶©µ¥º¯Êı ,Êµ²ÎÊÇ¾ßÌåµÄ¶©µ¥ 
-	struct menu* creatmenulist();//³õÊ¼»¯Á´±í 
-	void addmenulist(int,struct menu*);//ÍùÁ´±íÀïÌí¼ÓÄÚÈİ ,Êµ²ÎÊÇ¾ßÌåÆïÊÖ£¬¾ßÌå¶©µ¥ 
-	void performance();//´òÓ¡Ã¿Î»ÆïÊÖµÄ½Óµ¥Êı¡¢Íê³ÉÊı¡¢³¬Ê±Êı
-	void deletelist(int);//É¾³ıÆïÊÖ¶©µ¥ 
-	void destory();//ÊÍ·Å¿Õ¼ä
-	struct menu* The_ith(Rider*,int i);//·µ»ØÆïÊÖ¶©µ¥ÁĞ±íµÚ¼¸¸ö¶©µ¥ 
+	void buyrider();//ä¹°éª‘æ‰‹
+	void allocatemenu(int); //åˆ†é…è®¢å•å‡½æ•° ,å®å‚æ˜¯å…·ä½“çš„è®¢å• 
+	struct menu* creatmenulist();//åˆå§‹åŒ–é“¾è¡¨ 
+	void addmenulist(int,struct menu*);//å¾€é“¾è¡¨é‡Œæ·»åŠ å†…å®¹ ,å®å‚æ˜¯å…·ä½“éª‘æ‰‹ï¼Œå…·ä½“è®¢å• 
+	void performance();//æ‰“å°æ¯ä½éª‘æ‰‹çš„æ¥å•æ•°ã€å®Œæˆæ•°ã€è¶…æ—¶æ•°
+	void deletelist(int);//åˆ é™¤éª‘æ‰‹è®¢å• 
+	void destory();//é‡Šæ”¾ç©ºé—´
+	struct menu* The_ith(Rider*,int i);//è¿”å›éª‘æ‰‹è®¢å•åˆ—è¡¨ç¬¬å‡ ä¸ªè®¢å• 
 #endif 

@@ -16,7 +16,7 @@ Rider *rider=(Rider*)calloc(2,sizeof(Rider));	//骑手动态数组
 
 void start()
 {
-	//SetWindowSize(120,80);			//原图为78*51 
+	SetWindowSize(140,120);			//原图为78*51 
 	//限定骑手起始位置
 	rider[0].exist=1;
 	rider[1].exist=0;
@@ -27,6 +27,7 @@ void start()
 	int size=0;      //控制订单数组的大小 
 	int righttime=0;   //判断是否到达接单时刻 
 	int value=1;
+	int state=0;	//记录是否接完了所有单 
 	Map a;
 	a.init();		//绘制地图
 	//初始化message
@@ -35,7 +36,8 @@ void start()
 	Message.messagemoney=money;
 	Message.accomplish=0;		//完成数 
 	Message.totalovertime=0;			//超时数 
-	Message.sum=0;				//接单数 
+	Message.sum=0;				//接单数
+	FILE *fp=fopen("outputs.txt","w");						//输出文件 
 	FILE *fw=fopen("seles.txt","r"); //打开文件 
 	for(;value==1;sysclock++){	 			//大循环，控制整个进程 
 
@@ -80,8 +82,10 @@ void start()
 				fscanf(fw,"%d",&number);
 				fscanf(fw,"%d",&righttime);	
 			}
-			if(feof(fw)!=0)
+			if(feof(fw)!=0){
+				state=1; 
 				break;
+			}
 		}								
 		//5、判断是否到达送餐点，判断是否超时,采用遍历订单的方法 
 		for(j=0;j<size;j++){				
@@ -117,17 +121,26 @@ void start()
 		printmove();
 		//7、打印当前信息 
 		printmessage(Message);
-		//8、如果所有订单完成，跳出循环
+		//8、将当前信息输入到文件中
+		fprintf(fp,"当前时刻：%d\n",sysclock);
+		for(j=0;rider[j].exist==1;j++){
+			fprintf(fp,"骑手%d的位置:(%d,%d)\n",j+1,rider[j].x,rider[j].y);
+		} 
+		fprintf(fp,"接单数：%d\n",Message.sum);
+		fprintf(fp,"完成数：%d\n",Message.accomplish);
+		fprintf(fp,"超时数：%d\n",Message.totalovertime);
+		//9、如果所有订单完成，跳出循环
 		for(j=0;j<size;j++){
 			if(Menu[j].reach==0)
 			 	break;
 		}
-		if(j==size)
+		if(j==size&&state==1)
 			break; 			//订单数组中的所有订单都完成了，跳出循环。	
-		Sleep(1000); 
+		Sleep(1200); 
 	}
-	fclose(fw);			//关闭文件
-	SetWindowSize(100,100);	
+	fclose(fw);				//关闭文件
+	fclose(fp);
+	SetCursorPosition(40,0);	
 }
   
 int bankruptcy(int money)   //判断当前是否破产 
@@ -153,7 +166,7 @@ void printmove()
 		if(rider[i].Path.header->next!=rider[i].Path.tailer){
 			m=rider[i].Path.header->next->x;				//rider[i]的行驶路线中的下个一点，读出它的坐标 
 			n=rider[i].Path.header->next->y;
-			//if(rider[i].Path.header)
+			//if(rider[i].Path.header)如果当前路径中只有一个节点。 
 			ListNode* temp=rider[i].Path.header->next;					//删除第一个节点 
 			rider[i].Path.header->next=rider[i].Path.header->next->next;
 			rider[i].Path.header->next->pred=rider[i].Path.header;			

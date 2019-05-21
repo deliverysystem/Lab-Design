@@ -13,7 +13,7 @@ int sysclock=0;
 int money=1000;
 struct menu *Menu=(struct menu*)calloc(1,sizeof(struct menu));	//订单动态数组 
 Rider *rider=(Rider*)calloc(2,sizeof(Rider));	//骑手动态数组 
-
+int Graph[35][69];
 void start()
 {
 	SetWindowSize(140,120);			//原图为78*51 
@@ -69,11 +69,11 @@ void start()
 			fscanf(fw,"%d",&Menu[size].x2);
 			fscanf(fw,"%d",&Menu[size].y2);
 			Menu[size].endtime=righttime+30;
-			/*//坐标变换
+			//坐标变换
 			Menu[size].x1=2*Menu[size].x1+1;
 			Menu[size].y1=4*Menu[size].y1+2;
 			Menu[size].x2=2*Menu[size].x2+1;
-			Menu[size].y2=4*Menu[size].y2+2;*/				
+			Menu[size].y2=4*Menu[size].y2+2;				
 			size++;											
 			Message.sum+=1;					//接单数+1
 			//4、分配订单 
@@ -124,7 +124,7 @@ void start()
 		//8、将当前信息输入到文件中
 		fprintf(fp,"当前时刻：%d\n",sysclock);
 		for(j=0;rider[j].exist==1;j++){
-			fprintf(fp,"骑手%d的位置:(%d,%d)\n",j+1,rider[j].x,rider[j].y);
+			fprintf(fp,"骑手%d的位置:(%d,%d)\n",j+1,(rider[j].x-1)/2,(rider[j].y-2)/4);//2*rider[i].x+1,4*rider[i].y+2
 		} 
 		fprintf(fp,"接单数：%d\n",Message.sum);
 		fprintf(fp,"完成数：%d\n",Message.accomplish);
@@ -171,9 +171,9 @@ void printmove()
 			rider[i].Path.header->next=rider[i].Path.header->next->next;
 			rider[i].Path.header->next->pred=rider[i].Path.header;			
 			free(temp);															
-			a.changeposi(2*rider[i].x+1,4*rider[i].y+2);
+			a.changeposi(rider[i].x,rider[i].y);
 			a.clear();         				//清除骑手原位置 
-			a.changeposi(2*m+1,4*n+2);
+			a.changeposi(m,n);
 			a.PrintRider();  				//打印骑手图案函数
 			rider[i].changeposi(m,n);
 		}

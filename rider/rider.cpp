@@ -147,7 +147,7 @@ int Rider::CalculatePath(struct menu* newmenu){
 
 //对于时间不够的订单 不能按照上述条件来做.
 
-void generfunc(point* Now,struct menu* now,int disx,int disy,int idx,int idy)
+void generfunc(point* Now,struct menu* now,int disx,int disy,int idx,int idy,int T)
 {
 	if(!Graph[Now->x][Now->y+2])//可以先走y就先走y 
 		{
@@ -263,13 +263,13 @@ void Rider::GeneratePath(point* Now,struct menu* now, int T)
 							{
 								point* A1 = new point(now->x1-2,now->y1);
 								disx = Calcux(ts,A1),disy = Calcuy(ts,A1);
-								generfunc(Now,now,disx,disy,1,1);							
+								generfunc(Now,now,disx,disy,1,1,T);							
 							}
 						   else //走B 
 							{
 								point* A2 = new point(now->x1,now->y1-4);
 								disx = Calcux(ts,A2),disy = Calcuy(ts,A2);
-								generfunc(Now,now,disx,disy,1,1);
+								generfunc(Now,now,disx,disy,1,1,T);
 							}
 						}
 				
@@ -293,17 +293,17 @@ void Rider::GeneratePath(point* Now,struct menu* now, int T)
 					else if(Nowy->y<now->y1)//在右上方 
 						{
 							double probablity = rand() % (N + 1) / (float)(N + 1);
-							if(probality<0.5)//A
+							if(probality<0.5)
 							{
 								point* A1 = new point(now->x1-2,now->y1);
 								disx = Calcux(ts,A1),disy = Calcuy(ts,A1);
-								generfunc(Now,now,disx,disy,1,-1);
+								generfunc(Now,now,disx,disy,1,-1,T);
 							}
-							else//C
+							else
 							{
 								point* A2 = new point(now->x1,now->y1+4);
 								disx = Calcux(ts,A2),disy = Calcuy(ts,A2);
-								generfunc(Now,now,disx,disy,1,-1);
+								generfunc(Now,now,disx,disy,1,-1,T);
 							}
 						}
 				}
@@ -330,17 +330,17 @@ void Rider::GeneratePath(point* Now,struct menu* now, int T)
 					if(Now->y<now->y1)//左下方 
 						{
 						 double probablity = rand() % (N + 1) / (float)(N + 1);
-					       if(probablity<0.5) //D
+					       if(probablity<0.5) 
 							{
 								point* A1 = new point(now->x1+2,now->y1);
 								disx = Calcux(ts,A1),disy = Calcuy(ts,A1);
-								generfunc(Now,now,disx,disy,-1,1);
+								generfunc(Now,now,disx,disy,-1,1,T);
 							}
-						   else//B
+						   else
 							{
 								point* A2 = new point(now->x1,now->y1-4);
 								disx = Calcux(ts,A2),disy = Calcuy(ts,A2);
-								generfunc(Now,now,disx,disy,-1,1);
+								generfunc(Now,now,disx,disy,-1,1,T);
 							}
 						}
 					else if(Nowy->y==now->y1){//正下方 
@@ -361,17 +361,17 @@ void Rider::GeneratePath(point* Now,struct menu* now, int T)
 					else if(Nowy->y<now->y1)//右下方 
 						{
 							double probablity = rand() % (N + 1) / (float)(N + 1);
-							if(probality<0.5)//C
+							if(probality<0.5)
 							{
 								point* A1 = new point(now->x1+2,now->y1);
 								disx = Calcux(ts,A1),disy = Calcuy(ts,A1);
-								generfunc(Now,now,disx,disy,-1,-1);
+								generfunc(Now,now,disx,disy,-1,-1,T);
 							}
-							else//D
+							else
 							{
 								point* A2 = new point(now->x1,now->y1+4);
 								disx = Calcux(ts,A2),disy = Calcuy(ts,A2);
-								generfunc(Now,now,disx,disy,-1,-1);
+								generfunc(Now,now,disx,disy,-1,-1,T);
 							}
 						}
 					}
@@ -389,14 +389,14 @@ void Rider::GeneratePath(point* Now,struct menu* now, int T)
 								point* A1 = new point(now->x2-2,now->y2);
 								disx = Calcux(ts,A1);
 								disy = Calcuy(ts,A1);
-								generfunc(Now,now,disx,disy,1,1);		
+								generfunc(Now,now,disx,disy,1,1,T);		
 							}
 						   else //走B 
 							{
 								point* A2 = new point(now->x2,now->y2-4);
 								disx = Calcux(ts,A2);
 								disy = Calcuy(ts,A2);
-								generfunc(Now,now,disx,disy,1,1);		
+								generfunc(Now,now,disx,disy,1,1,T);		
 							}
 						}
 					
@@ -420,19 +420,19 @@ void Rider::GeneratePath(point* Now,struct menu* now, int T)
 					else if(Nowy->y<now->y2)//在右上方 
 						{
 							double probablity = rand() % (N + 1) / (float)(N + 1);
-							if(probality<0.5)//走A
+							if(probality<0.5)
 							{
 								point* A1 = new point(now->x2-2,now->y2);
 								disx = Calcux(ts,A1);
 								disy = Calcuy(ts,A1);
-								generfunc(Now,now,disx,disy,1,-1);		
+								generfunc(Now,now,disx,disy,1,-1,T);		
 							}
-							else//走C
+							else
 							{
 								point* A2 = new point(now->x2,now->y2+4);
 								disx = Calcux(ts,A2);
 								disy = Calcuy(ts,A2);
-								generfunc(Now,now,disx,disy,1,-1);		
+								generfunc(Now,now,disx,disy,1,-1,T);		
 							}
 						}
 				}
@@ -461,19 +461,19 @@ void Rider::GeneratePath(point* Now,struct menu* now, int T)
 					if(Now->y<now->y2)//左下方 
 						{
 						 double probablity = rand() % (N + 1) / (float)(N + 1);
-					       if(probablity<0.5) //D
+					       if(probablity<0.5) 
 							{
 								point* A1 = new point(now->x2+2,now->y2);
 								disx = Calcux(ts,A1);
 								disy = Calcuy(ts,A1);
-								generfunc(Now,now,disx,disy,-1,1);		
+								generfunc(Now,now,disx,disy,-1,1,T);		
 							}
-						   else//B
+						   else
 							{
 								point* A2 = new point(now->x2,now->y2-4);
 								disx = Calcux(ts,A2);
 								disy = Calcuy(ts,A2);
-								generfunc(Now,now,disx,disy,-1,1);		
+								generfunc(Now,now,disx,disy,-1,1,T);		
 							}
 						}
 					else if(Nowy->y==now->y2)//在正下方
@@ -495,19 +495,19 @@ void Rider::GeneratePath(point* Now,struct menu* now, int T)
 					else if(Nowy->y<now->y2)//右下方 
 						{
 							double probablity = rand() % (N + 1) / (float)(N + 1);
-							if(probality<0.5)//D
+							if(probality<0.5)
 							{
 								point* A1 = new point(now->x2+2,now->y2);
 								disx = Calcux(ts,A1);
 								disy = Calcuy(ts,A1);
-								generfunc(Now,now,disx,disy,-1,-1);		
+								generfunc(Now,now,disx,disy,-1,-1,T);		
 							}
-							else//C
+							else
 							{
 								point* A2 = new point(now->x2,now->y2+4);
 								disx = Calcux(ts,A2);
 								disy = Calcuy(ts,A2);
-								generfunc(Now,now,disx,disy,-1,-1);		
+								generfunc(Now,now,disx,disy,-1,-1,T);		
 							}
 						}
 					}

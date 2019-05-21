@@ -3,9 +3,7 @@
 #include<stdlib.h>
 void List::init(){
     header = (ListNode*)malloc(sizeof(ListNode));
-    header->next=NULL;
     tailer = (ListNode*)malloc(sizeof(ListNode));
-    tailer->next=NULL;
     header->next = tailer;
     tailer->pred = header;
     header->pred = NULL;
@@ -27,9 +25,7 @@ List::List(List const& L){
 
 void List::clear()
 {
-		int oldSize = _size;
-		while (header->next != tailer)
-			remove(header->next);
+	while ( 0 < _size ) remove ( header->next ); 
 }
 
 void List::InsertAsl(ListNode* p)

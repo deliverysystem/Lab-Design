@@ -52,7 +52,8 @@ void start()
 			if(sysclock==0){
 				fscanf(fw,"%d",&number);
 				fscanf(fw,"%d",&righttime);
-			}
+				break;										//此处改动 
+			} 
 			if(size!=0){
 				Menu=(struct menu*)realloc(Menu,(size+1)*sizeof(struct menu));	//将订单数组的大小加一 
 				Menu[size].x1=0;						//初始化新增加的订单 
@@ -117,8 +118,13 @@ void start()
 		}
 		if(boolnumber==0)
 			break;
-		//6、对骑手进行移动
-		printmove();
+		//6、对骑手进行移动 
+		if(size!=0)								//此处改动 
+			printmove();
+		else{
+			point a(15,34);
+			a.PrintRider();
+		}	
 		//7、打印当前信息 
 		printmessage(Message);
 		//8、将当前信息输入到文件中

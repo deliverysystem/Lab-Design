@@ -5,7 +5,7 @@
 #include "controller.h"
 #define N 999
 #define INF 0x3f3f3f3f
-#define The_ith(this,i) waitlist[i];
+//#define The_ith(this,i) waitlist[i];
 //#define The_ith(this,minid) waitlist[minid];
 //#define The_ith(this,cnt) waitlist[cnt];
 
@@ -56,21 +56,22 @@ int Rider::Calcuy(point* A,point* B)
 }
 
 int Rider::CalculatePath(struct menu* newmenu){
+	Path.init();
     OldPath=Path;//先把现在的路径存下来 
-    Path.clear();//清空路径 
+//    Path.clear();//清空路径 
     int Nowx = this->x;
     int Nowy = this->y;//取出骑手的坐标 
     point* ts = new point(Nowx,Nowy);//构造骑手point 
     
     //计算订单数 
-    struct menu* temp = waitlist;
+    struct menu* temp = waitlist->nextmenu;
     int cnt=0;
     while(temp!=NULL){
-        cnt++;
         temp = temp->nextmenu;
+        cnt++;
     }
     
-    waitlist[cnt].nextmenu=newmenu;//先把新订单加入链表 
+    The_ith(this,cnt)->nextmenu=newmenu;//先把新订单加入链表 
     cnt+=1;//订单数+1 
     
     int T = sysclock;
@@ -100,36 +101,36 @@ int Rider::CalculatePath(struct menu* newmenu){
                 int mind=INF;
                 for(int i=1;i<=cnt;i++)
                     {
-                        if( waitlist[i].get&&!(waitlist[i].reach))//对于已经取到餐的订单
+                        if( The_ith(this,i)->get&&!(The_ith(this,i)->reach))//对于已经取到餐的订单
                             {
-                            	point* B = new point(waitlist[i].x2, waitlist[i].y2);
+                            	point* B = new point(The_ith(this,i)->x2, The_ith(this,i)->y2);
                                 if(mind<Manhatten(ts,B))
            
 		                            minid = i;
                                 mind= min(mind,Manhatten(ts,B));
                             }
-                        else if(!(waitlist[i].get)){//对于未取到的订单
-                        		point* A = new point(waitlist[i].x1, waitlist[i].y1);
+                        else if(!(The_ith(this,i)->get)){//对于未取到的订单
+                        		point* A = new point(The_ith(this,i)->x1, The_ith(this,i)->y1);
                                 if(mind<Manhatten(ts,A))
                                     minid = i;
                                mind = min(mind,Manhatten(ts,A));      
                         }
                     }
 		if(minid==0) break;
-               // GeneratePath(ts,waitlist[minid],T);
-                if(!(waitlist[minid].get))
+               // GeneratePath(ts,The_ith(this,minid),T);
+                if(!(The_ith(this,minid)->get))
                     {
-                    	point* B = new point(waitlist[minid].x2, waitlist[minid].y2);
+                    	point* B = new point(The_ith(this,minid)->x2, The_ith(this,minid)->y2);
                         T += Manhatten(ts,B);
                         ts = B;
-                         waitlist[minid].get=1;
+                         The_ith(this,minid)->get=1;
                     }
                 else 
                     {
-                    	point* A = new point(waitlist[i].x1, waitlist[i].y1);
+                    	point* A = new point(The_ith(this,minid)->x1, The_ith(this,minid)->y1);
                         T += Manhatten(ts,A);
                         ts = A;
-                         waitlist[minid].reach=1;
+                         The_ith(this,minid)->reach=1;
                     }                 
             }
     }
@@ -143,7 +144,7 @@ int Rider::CalculatePath(struct menu* newmenu){
     OldPath = Path; 
     Path = transition;
 	cnt = cnt-1;
-    waitlist[cnt].nextmenu=NULL;//从waitlist里面删除newmenu
+    The_ith(this,cnt)->nextmenu=NULL;//从waitlist里面删除newmenu
     return T;
     
 }

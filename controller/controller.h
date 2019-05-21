@@ -10,5 +10,6 @@ extern int sysclock;
 extern int money;
 extern struct menu *Menu;
 extern Rider *rider;
+extern int Graph[35][69];
 
 #endif

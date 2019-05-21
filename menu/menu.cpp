@@ -36,13 +36,13 @@ void buyrider(){//买骑手
 		if(i==1){//初始化,使nextmenuptr成为每个骑手订单链表的头指针 
 			rider[0].waitlist=creatmenulist();
 			rider[i].waitlist=creatmenulist();
-			rider[i].x=8;
-			rider[i].y=8;
+			rider[i].x=15;
+			rider[i].y=34;
 		}
 		else{ 
 			rider[i].waitlist=creatmenulist();
-			rider[i].x=8;
-			rider[i].y=8;
+			rider[i].x=15;
+			rider[i].y=34;
 		}
 		money=money-300;
 	}

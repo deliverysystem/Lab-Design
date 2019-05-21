@@ -25,6 +25,9 @@ class Rider{
     int Manhatten(point* x,point* y);
     void GeneratePath(point* A,struct menu*,int t);
     void AddTOWaitlist(struct menu* newmenu);//将新的订单添加进waitlist
+    void generfunc(point* Now,struct menu* now,int disx,int disy,int idx,int idy,int T);
+    int Calcux(point* A,point* B);
+    int Calcuy(point* A,point* B);
     ~Rider() {}
     //friend class Menu;
     friend class point;

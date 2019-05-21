@@ -105,7 +105,6 @@ int Rider::CalculatePath(struct menu* newmenu){
                             {
                             	point* B = new point(The_ith(this,i)->x2, The_ith(this,i)->y2);
                                 if(mind<Manhatten(ts,B))
-           
 		                            minid = i;
                                 mind= min(mind,Manhatten(ts,B));
                             }
@@ -140,9 +139,9 @@ int Rider::CalculatePath(struct menu* newmenu){
     T += Path._size; 
 	
 	//交换现在的路径和原来的路径 
-    List transition(OldPath);
-    OldPath = Path; 
-    Path = transition;
+    //List transition(OldPath);
+    //OldPath = Path; 
+    //Path = transition;
 	cnt = cnt-1;
     The_ith(this,cnt)->nextmenu=NULL;//从waitlist里面删除newmenu
     return T;

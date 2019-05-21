@@ -13,17 +13,7 @@ void point::PrintRider(){
 	std::cout<<"*";
 };
 
-void point::PrintCanteen(){
-	SetCursorPosition(x,y);
-	std::cout<<"-----"<<endl;
-	SetCursorPosition(x+1,y);
-	std::cout<<"|   |"<<endl;
-	SetCursorPosition(x+2,y);
-	std::cout<<"-----";
-	SetCursorPosition(x,y);
-}
-
-void point::PrintResidence(){
+void point::Printmap(){
 	SetCursorPosition(x,y);
 	std::cout<<"-----"<<endl;
 	SetCursorPosition(x+1,y);

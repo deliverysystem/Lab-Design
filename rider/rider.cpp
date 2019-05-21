@@ -169,7 +169,7 @@ void Rider::generfunc(point* Now,struct menu* now,int disx,int disy,int idx,int 
 							ListNode* temp = new ListNode(Now->x,Now->y+dy*idy,T++);
 							Path.InsertAsl(temp);
 						}
-					Now->y = Now->y+dy*idy+4*idy;//
+					Now->y = Now->y+dy*idy-4*idy;//
 						for(int dx=2;dx<=disx;dx+=4)
 						{
 		
@@ -191,7 +191,7 @@ void Rider::generfunc(point* Now,struct menu* now,int disx,int disy,int idx,int 
 						ListNode* temp = new ListNode(Now->x,Now->y+dy*idy,T++);
 						Path.InsertAsl(temp);
 					}
-				Now->y=Now->y+(dy+4)*idy;
+				Now->y=Now->y+(dy-4)*idy;
 				for(int dx=2;dx<=disx;dx+=4)
 					{
 						ListNode* temp = new ListNode(Now->x+dx*idx,Now->y,T++);
@@ -218,7 +218,7 @@ void Rider::generfunc(point* Now,struct menu* now,int disx,int disy,int idx,int 
 							ListNode* temp = new ListNode(Now->x,Now->y+dy*idy,T++);
 							Path.InsertAsl(temp);
 						}
-					Now->y = Now->y+dy*idy+4*idy;
+					Now->y = Now->y+dy*idy-4*idy;
 						for(int dx=2;dx<=disx;dx+=4)
 						{
 							ListNode* temp = new ListNode(Now->x+dx*idx,Now->y,T++);
@@ -238,7 +238,7 @@ void Rider::generfunc(point* Now,struct menu* now,int disx,int disy,int idx,int 
 						ListNode* temp = new ListNode(Now->x+dx*idx,Now->y,T++);
 						Path.InsertAsl(temp);
 					}
-				Now->x=Now->x+(dx+2)*idx;
+				Now->x=Now->x+(dx-2)*idx;
 				for(int dy=4;dy<=disy;dy+=8)
 					{
 						ListNode* temp = new ListNode(Now->x,Now->y+dy*idy,T++);

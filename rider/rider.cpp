@@ -139,8 +139,8 @@ int Rider::CalculatePath(struct menu* newmenu){
 	
 	//交换现在的路径和原来的路径 
     transition = Path;
-    OldPath = Path;
-    Path = transition;
+    Path = OldPath;
+    OldPath = transition;
 	cnt = cnt-1;
     The_ith(this,cnt)->nextmenu=NULL;//从waitlist里面删除newmenu
     return T;
@@ -155,14 +155,14 @@ void Rider::generfunc(point* Now,struct menu* now,int disx,int disy,int idx,int 
 			if(disy%8==0)//y方向距离是8的倍数 
 			{
 				if(disx==0)
-					for(int dy=0;dy<=disy;dy+=8)
+					for(int dy=8;dy<=disy;dy+=8)
 						{
 							ListNode* temp = new ListNode(Now->x,Now->y+dy*idy,T++);
 							Path.InsertAsl(temp);
 						}
 				else{
 					int dy;
-						for(dy=0;dy<=disy-8;dy+=8)
+						for(dy=8;dy<=disy-8;dy+=8)
 						{	
 							ListNode* temp = new ListNode(Now->x,Now->y+dy*idy,T++);
 							Path.InsertAsl(temp);
@@ -182,9 +182,9 @@ void Rider::generfunc(point* Now,struct menu* now,int disx,int disy,int idx,int 
 			}
 			else//y方向的距离不是8的倍数
 			{
-				int dy=0;
+				int dy;
 				T = sysclock;
-				for(dy=0;dy<=(disy/8)*8;dy+=8)
+				for(dy=8;dy<=(disy/8)*8;dy+=8)
 					{
 						ListNode* temp = new ListNode(Now->x,Now->y+dy*idy,T++);
 						Path.InsertAsl(temp);
@@ -204,14 +204,14 @@ void Rider::generfunc(point* Now,struct menu* now,int disx,int disy,int idx,int 
 			{
 				//骑手在房子右边 
 				if(disy==0)
-					for(int dx=0;dx<=disx;dx+=4)
+					for(int dx=4;dx<=disx;dx+=4)
 						{
 							ListNode* temp = new ListNode(Now->x+dx*idx,Now->y,T++);
 							Path.InsertAsl(temp);
 						}
 				else{
 					int dy;
-						for(dy=0;dy<=disy-8;dy+=8)
+						for(dy=8;dy<=disy-8;dy+=8)
 						{
 							ListNode* temp = new ListNode(Now->x,Now->y+dy*idy,T++);
 							Path.InsertAsl(temp);
@@ -229,9 +229,9 @@ void Rider::generfunc(point* Now,struct menu* now,int disx,int disy,int idx,int 
 			}
 			else//x方向的距离不是4的倍数
 			{
-				int dx=0;
+				int dx;
 				T = sysclock;
-				for(dx=0;dx<=(disx/4)*4;dx+=4)
+				for(dx=4;dx<=(disx/4)*4;dx+=4)
 					{
 						ListNode* temp = new ListNode(Now->x+dx*idx,Now->y,T++);
 						Path.InsertAsl(temp);
@@ -281,17 +281,15 @@ void Rider::GeneratePath(point* Now,struct menu* now, int T)
 					else if(Nowy==now->y1)//在正上方 
 					 	{
 					 		int id=1;
-					 		ListNode* temp = new ListNode(Now->x,Now->y,T++);
-					 		Path.InsertAsl(temp); 
 					 		point* A1 = new point(now->x1,now->y1-4);
 					 		disx = Calcux(ts,A1);
 							disy = Calcuy(ts,A1);
 							for(int dx=2;dx<=disx;dx+=4)
 								{
-									ListNode* temp = new ListNode(Now->x+dx*id,Now->y-4,T++);
+									ListNode* temp = new ListNode(Now->x+dx*id,Now->y-4,++T);
 									Path.InsertAsl(temp);
 								}
-							ListNode* tmp = new ListNode(now->x1,now->y1,T);
+							ListNode* tmp = new ListNode(now->x1,now->y1,++T);
 							Path.InsertAsl(tmp);
 						 }
 						 
@@ -318,8 +316,6 @@ void Rider::GeneratePath(point* Now,struct menu* now, int T)
 					id=1;
 				else
 					id=-1;//正右
-				ListNode* temp = new ListNode(Now->x,Now->y,T++);
-				Path.InsertAsl(temp);
 		 		point* A1 = new point(now->x1,now->y1-4*id);
 		 		disx = Calcux(ts,A1);
 				disy = Calcuy(ts,A1);
@@ -350,17 +346,15 @@ void Rider::GeneratePath(point* Now,struct menu* now, int T)
 						}
 					else if(Now->y==now->y1){//正下方 
 						int id=-1;
-					 		ListNode* temp = new ListNode(Now->x,Now->y,T++);
-					 		Path.InsertAsl(temp);
 					 		point* A1 = new point(now->x1,now->y1-4);
 					 		disx = Calcux(ts,A1);
 							disy = Calcuy(ts,A1);
 							for(int dx=2;dx<=disx;dx+=4)
 								{
-									ListNode* tmp = new ListNode(Now->x+dx*id,Now->y-4,T++);
+									ListNode* tmp = new ListNode(Now->x+dx*id,Now->y-4,++T);
 									Path.InsertAsl(tmp);
 								}
-							ListNode* tmp = new ListNode(now->x1,now->y1,T);
+							ListNode* tmp = new ListNode(now->x1,now->y1,++T);
 							Path.InsertAsl(tmp);
 					}
 					else if(Now->y>now->y1)//右下方 
@@ -408,17 +402,15 @@ void Rider::GeneratePath(point* Now,struct menu* now, int T)
 					else if(Now->y==now->y2)//在正上方
 					 	{
 					 		int id=1;
-					 		ListNode* temp = new ListNode(Now->x,Now->y,T++);
-					 		Path.InsertAsl(temp);
 					 		point* A2 = new point(now->x2,now->y2-4);
 					 		disx = Calcux(ts,A2);
 							disy = Calcuy(ts,A2);
 							for(int dx=2;dx<=disx;dx+=4)
 								{
-									ListNode* tmp = new ListNode(Now->x+dx*id,Now->y-4,T++);
+									ListNode* tmp = new ListNode(Now->x+dx*id,Now->y-4,++T);
 									Path.InsertAsl(tmp);
 								}
-							ListNode* tmp = new ListNode(now->x2,now->y2,T);
+							ListNode* tmp = new ListNode(now->x2,now->y2,++T);
 							Path.InsertAsl(tmp);
 						 }
 						 
@@ -484,17 +476,15 @@ void Rider::GeneratePath(point* Now,struct menu* now, int T)
 					else if(Now->y==now->y2)//在正下方
 					 	{
 							int id=-1;
-					 		ListNode* temp = new ListNode(Now->x,Now->y,T++);
-					 		Path.InsertAsl(temp);
 					 		point* A2 = new point(now->x2,now->y2-4);
 					 		disx = Calcux(ts,A2);
 							disy = Calcuy(ts,A2);
 							for(int dx=2;dx<=disx;dx+=4)
 								{
-									ListNode* tmp = new ListNode(Now->x+dx*id,Now->y-4,T++);
+									ListNode* tmp = new ListNode(Now->x+dx*id,Now->y-4,++T);
 									Path.InsertAsl(tmp);
 								}
-							ListNode* tmp = new ListNode(now->x2,now->y2,T);
+							ListNode* tmp = new ListNode(now->x2,now->y2,++T);
 							Path.InsertAsl(tmp);
 						 }
 					else if(Now->y>now->y2)//右下方 

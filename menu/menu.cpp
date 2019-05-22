@@ -97,9 +97,10 @@ void deletelist(int menunum){//订单送到时删除该订单
 
 struct menu* The_ith(Rider *A,int i){////返回骑手订单列表第几个订单 
 	struct menu *current=A->waitlist;
-	current=current->nextmenu;
+//	current=current->nextmenu;
 	int num;
 	for(num=1;current!=NULL&&num<=i;current=current->nextmenu,num++){}
+	num -=1;
 	if(num==i)
 		return current;
 	else if(i==0)

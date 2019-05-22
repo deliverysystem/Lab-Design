@@ -1,7 +1,7 @@
 #ifndef LIST_H
 #define LIST_H
 #include "listnode.h"
-
+#include <stdlib.h> 
 class List{
   	public:
   	 	int _size; 
@@ -27,15 +27,18 @@ class List{
     		}
 	        void InsertAsl(ListNode* p);//插入到最后面 
 	        void remove(ListNode* p);// 删除
-			List* operator = (const List& A)
+			List& operator = (const List& A)
 			{
-			  this->clear();
+			  //this->clear();
+			  this->header=A->header;
+			  this->tailer=A->tailer;
+			  this._size=0;
 		      ListNode* temp = A.first();
 		      while(temp!=A.last()){
 			  	this->InsertAsl(temp);
 			  	temp = temp->next;
 		      }
-		      return this;
+		      return *this;
 			}	   
 };
 

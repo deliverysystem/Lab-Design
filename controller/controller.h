@@ -8,8 +8,8 @@ extern void printmove();//对骑手进行移动
 
 extern int sysclock;
 extern int money;
-extern struct menu *Menu;
-extern Rider *rider;
-extern int Graph[35][69];
+extern struct menu Menu[301];
+extern Rider rider[100];
+extern int Graph[100][100];
 
 #endif

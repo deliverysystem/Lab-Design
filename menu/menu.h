@@ -17,6 +17,8 @@ class Rider;
 			int get;//判断骑手是否取餐 
 			int reach;//判断骑手是否送到订餐 
 			struct menu *nextmenu;
+			int truereach;
+			int trueget;
 		};
 	
 	void buyrider();//买骑手

@@ -70,6 +70,7 @@ void allocatemenu(int object){ //分配订单函数
 		}
 	}
 	Menu[object].p=&rider[minrider];//明确订单被分配到那个骑手 
+	rider[minrider].Path=rider[minrider].OldPath;
 	Menu[object].underline=minrider; 
 	addmenulist(minrider,object);//加入到骑手订单列表中 
 	rider[minrider].AddTOWaitlist(&Menu[object]);//加入到路径列表中 

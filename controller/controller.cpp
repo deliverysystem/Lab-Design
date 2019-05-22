@@ -12,7 +12,7 @@
 int sysclock=0;
 int money=1000;
 struct menu *Menu=(struct menu*)calloc(1,sizeof(struct menu));	//订单动态数组 
-Rider *rider=(Rider*)calloc(2,sizeof(Rider));	//骑手动态数组 
+Rider *rider=(Rider*)calloc(2,sizeof(Rider));		//骑手动态数组 
 int Graph[100][100];
 void start()
 {
@@ -172,22 +172,20 @@ void printmove()
 		if(rider[i].Path.header->next!=rider[i].Path.tailer){
 			m=rider[i].Path.header->next->x;				//rider[i]的行驶路线中的下个一点，读出它的坐标 
 			n=rider[i].Path.header->next->y;
-			if(rider[i].Path.header->next->next!=rider[i].Path.tailer){
-				ListNode* temp=rider[i].Path.header->next;					//删除第一个节点 
-				rider[i].Path.header->next=rider[i].Path.header->next->next;
-				rider[i].Path.header->next->pred=rider[i].Path.header;			
-				free(temp);															
-				a.changeposi(rider[i].x,rider[i].y);
-				a.clear();         				//清除骑手原位置 
-				a.changeposi(m,n);
-				a.PrintRider();  				//打印骑手图案函数
-				rider[i].changeposi(m,n);
-			}
-			else{								//若骑手当前路径链表里只有一个节点 
-				a.x=rider[i].x;
-				a.y=rider[i].y;
-				a.PrintRider();
-			}
+			ListNode* temp=rider[i].Path.header->next;					//删除第一个节点 
+			rider[i].Path.header->next=rider[i].Path.header->next->next;
+			rider[i].Path.header->next->pred=rider[i].Path.header;			
+			free(temp);															
+			a.changeposi(rider[i].x,rider[i].y);
+			a.clear();         				//清除骑手原位置 
+			a.changeposi(m,n);
+			a.PrintRider();  				//打印骑手图案函数
+			rider[i].changeposi(m,n);
 		}
-	}
+		else{								//若骑手当前路径链表里只有一个节点 
+			a.x=rider[i].x;
+			a.y=rider[i].y;
+			a.PrintRider();
+		}
+	}	
 }

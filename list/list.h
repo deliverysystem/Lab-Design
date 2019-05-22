@@ -30,9 +30,9 @@ class List{
 			List& operator = (const List& A)
 			{
 			  //this->clear();
-			  this->header=A->header;
-			  this->tailer=A->tailer;
-			  this._size=0;
+			  this->header=A.header;
+			  this->tailer=A.tailer;
+			  this->_size=0;
 		      ListNode* temp = A.first();
 		      while(temp!=A.last()){
 			  	this->InsertAsl(temp);

@@ -42,6 +42,7 @@ class List{
 			  	this->InsertAsl(temp);
 			  	temp = temp->next;
 		      }
+		      this->InsertAsl(temp);	//改动 
 		      return *this;
 			}	   
 };

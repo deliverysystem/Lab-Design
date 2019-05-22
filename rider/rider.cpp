@@ -80,13 +80,13 @@ int Rider::CalculatePath(struct menu* newmenu){
 	    point* A = new point(newmenu->x1, newmenu->y1);
 	     T += Manhatten(ts,A);
              ts = A;
-            waitlist[1].get=1;
+            this->waitlist->nextmenu->get=1;//修改 
 	    //再送餐
 	    GeneratePath(ts,newmenu,T);
 	    point* B = new point(newmenu->x2, newmenu->y2);
 	    T += Manhatten(ts,B);
             ts = B;
-            waitlist[1].reach=1;
+            this->waitlist->nextmenu->reach=1;//修改 
     }//只有新加入的订单一个单 
 	
 	
@@ -157,6 +157,105 @@ int Rider::CalculatePath(struct menu* newmenu){
 }
 
 //对于时间不够的订单 不能按照上述条件来做.
+void Rider::generfunc(point* Now,struct menu* now,int disx,int disy,int idx,int idy,int T)
+{
+	if(!Graph[Now->x][Now->y+2])//可以先走y就先走y 
+		{
+			if(disy%8==0)//y方向距离是8的倍数 
+			{
+				if(disx==0)
+					for(int dy=8;dy<=disy;dy+=8)
+						{
+							ListNode* temp = new ListNode(Now->x,Now->y+dy*idy,T++);
+							Path.InsertAsl(temp);
+						}
+				else{
+					int dy;
+						for(dy=8;dy<=disy-8;dy+=8)
+						{	
+							ListNode* temp = new ListNode(Now->x,Now->y+dy*idy,T++);
+							Path.InsertAsl(temp);
+						}
+					int Y = Now->y+dy*idy-4*idy;//
+						for(int dx=2;dx<=disx;dx+=4)
+						{
+		
+							ListNode* temp = new ListNode(Now->x+dx*idx,Y,T++);
+							Path.InsertAsl(temp);
+						}
+						ListNode* temp = new ListNode(now->x1-2*idx,now->y1,T);//-2?+2
+						Path.InsertAsl(temp);
+					}
+				//骑手在房子上面
+				//骑手沿y方向走到最远的路口 然后走disx 然后再走剩下的disy
+			}
+			else//y方向的距离不是8的倍数
+			{
+				int dy;
+				T = sysclock;
+				for(dy=8;dy<=(disy/8)*8;dy+=8)
+					{
+						ListNode* temp = new ListNode(Now->x,Now->y+dy*idy,T++);
+						Path.InsertAsl(temp);
+					}
+				int Y=Now->y+(dy-4)*idy;
+				for(int dx=2;dx<=disx;dx+=4)
+					{
+						ListNode* temp = new ListNode(Now->x+dx*idx,Y,T++);
+						Path.InsertAsl(temp);
+					}
+				//走到最后一个路口，走完disx 
+			} 
+	    }
+	else//不可以先走y 那就先走x
+		{//类似的将上一段的y换成x 
+			if(disx%4==0)//x方向距离是4的倍数 
+			{
+				//骑手在房子右边 
+				if(disy==0)
+					for(int dx=4;dx<=disx;dx+=4)
+						{
+							ListNode* temp = new ListNode(Now->x+dx*idx,Now->y,T++);
+							Path.InsertAsl(temp);
+						}
+				else{
+					int dx;
+					for(dx=4;dx<=disx;dx+=4)
+						{
+							ListNode* temp = new ListNode(Now->x+dx*idx,Now->y,T++);
+							Path.InsertAsl(temp);
+						}
+					int X = Now->x+dx*idx-2*idx;
+					for(int dy=4;dy<=disy;dy+=8)
+					{
+						ListNode* temp = new ListNode(X,Now->y+dy*idy,T++);
+						Path.InsertAsl(temp);
+					}
+					ListNode* temp = new ListNode(now->x1-2*idx,now->y1,T);
+					Path.InsertAsl(temp);
+					}
+				//骑手沿x方向走到最远的路口 然后走disy 然后再走剩下的disx
+			}
+			else//x方向的距离不是4的倍数
+			{
+				int dx;
+				T = sysclock;
+				for(dx=4;dx<=(disx/4)*4;dx+=4)
+					{
+						ListNode* temp = new ListNode(Now->x+dx*idx,Now->y,T++);
+						Path.InsertAsl(temp);
+					}
+				int X=Now->x+(dx-2)*idx;
+				for(int dy=4;dy<=disy;dy+=8)
+					{
+						ListNode* temp = new ListNode(X,Now->y+dy*idy,T++);
+						Path.InsertAsl(temp);
+					}
+				//走到最后一个路口，走disy 走完剩下的disx
+			} 
+		}
+}
+
 void Rider::GeneratePath(point* Now,struct menu* now, int T)
 {
 	int Nowx = this->x;
@@ -350,8 +449,8 @@ void Rider::GeneratePath(point* Now,struct menu* now, int T)
 					id=1;
 				else
 					id=-1;//正右方 
-				ListNode* temp = new ListNode(Now->x,Now->y,T++);
-				Path.InsertAsl(temp);
+				//ListNode* temp = new ListNode(Now->x,Now->y,T++);
+				//Path.InsertAsl(temp);
 		 		point* A2 = new point(now->x2,now->y2-4*id);
 		 		disx = Calcux(ts,A2);
 				disy = Calcuy(ts,A2);

@@ -99,33 +99,37 @@ int Rider::CalculatePath(struct menu* newmenu){
                 int minid=0;
                 int mind=INF;
                 for(int i=1;i<=cnt;i++)
-                    {
+                    if(The_ith(this,i)->p==NULL||The_ith(this,i)->p==this){
+                    	if(The_ith(this,i)->truereach)
+                    		continue;
+                    	if(The_ith(this,i)->trueget)
+                    		The_ith(this,i)->get = 1;
                         if( The_ith(this,i)->get&&!(The_ith(this,i)->reach))//对于已经取到餐的订单
                             {
                             	point* B = new point(The_ith(this,i)->x2, The_ith(this,i)->y2);
-                                if(mind<Manhatten(ts,B))
+                                if(mind>Manhatten(ts,B))
 		                            minid = i;
                                 mind= min(mind,Manhatten(ts,B));
                             }
                         else if(!(The_ith(this,i)->get)){//对于未取到的订单
                         		point* A = new point(The_ith(this,i)->x1, The_ith(this,i)->y1);
-                                if(mind<Manhatten(ts,A))
+                                if(mind>Manhatten(ts,A))
                                     minid = i;
                                mind = min(mind,Manhatten(ts,A));      
                         }
                     }
 		if(minid==0) break;
-               // GeneratePath(ts,The_ith(this,minid),T);
+                GeneratePath(ts,The_ith(this,minid),T);
                 if(!(The_ith(this,minid)->get))
                     {
-                    	point* B = new point(The_ith(this,minid)->x2, The_ith(this,minid)->y2);
+                    	point* B = new point(The_ith(this,minid)->x1, The_ith(this,minid)->y1);
                         T += Manhatten(ts,B);
                         ts = B;
                          The_ith(this,minid)->get=1;
                     }
                 else 
                     {
-                    	point* A = new point(The_ith(this,minid)->x1, The_ith(this,minid)->y1);
+                    	point* A = new point(The_ith(this,minid)->x2, The_ith(this,minid)->y2);
                         T += Manhatten(ts,A);
                         ts = A;
                          The_ith(this,minid)->reach=1;
@@ -133,6 +137,11 @@ int Rider::CalculatePath(struct menu* newmenu){
             }
     }
     
+    for(int i=1;i<=cnt;i++)
+    	{
+    		The_ith(this,i)->get = The_ith(this,i)->trueget;
+    		The_ith(this,i)->reach = The_ith(this,i)->truereach;
+		}
     //计算现在路径的时间 
     T = sysclock;
     T += Path._size; 

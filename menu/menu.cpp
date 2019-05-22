@@ -21,6 +21,7 @@ void addmenulist(int A,int object){//添加订单
 		current=current->nextmenu;
 	}
 	current->nextmenu=&Menu[object];//将订单加入链表
+	rider[A].receive++;
 	current=current->nextmenu;
 	current->nextmenu=(struct menu*)malloc(sizeof(struct menu));//开创新的空间 
 	current->nextmenu=NULL;
@@ -30,7 +31,6 @@ void buyrider(){//买骑手
 	int i;
 	while(money>=350){//大于400是为了留一段缓冲，防止买完骑手没钱导致破产 
 		for(i=0;rider[i].exist==1;i++){};//判断哪些骑手存在
-		rider=(Rider*)realloc(rider,(i+2)*sizeof(Rider)); 
 		rider[i].exist=1;
 		rider[i+1].exist=0;
 		if(i==1){//初始化,使nextmenuptr成为每个骑手订单链表的头指针 
@@ -38,12 +38,18 @@ void buyrider(){//买骑手
 			rider[0].Path.init();
 			rider[i].waitlist=creatmenulist();
 			rider[1].Path.init();
+			rider[i].receive =0;
+			rider[i].achieve=0;
+			rider[i].overtime=0;
 			rider[i].x=15;
 			rider[i].y=34;
 		}
 		else{ 
 			rider[i].waitlist=creatmenulist();
 			rider[i].Path.init();
+			rider[i].receive =0;
+			rider[i].achieve=0;
+			rider[i].overtime=0;
 			rider[i].x=15;
 			rider[i].y=34;
 		}

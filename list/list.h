@@ -30,8 +30,12 @@ class List{
 			List& operator = (const List& A)
 			{
 			  //this->clear();
-			  this->header=A.header;
-			  this->tailer=A.tailer;
+			  this->header = (ListNode*)malloc(sizeof(ListNode));
+			  this->tailer = (ListNode*)malloc(sizeof(ListNode));
+			  header->next=tailer;
+			  header->pred=NULL;
+			  tailer->pred=header;
+			  tailer->next=NULL;
 			  this->_size=0;
 		      ListNode* temp = A.first();
 		      while(temp!=A.last()){

@@ -42,7 +42,8 @@ class List{
 			  	this->InsertAsl(temp);
 			  	temp = temp->next;
 		      }
-		      this->InsertAsl(temp);	//改动 
+		      if(temp!=NULL)
+		      	this->InsertAsl(temp);
 		      return *this;
 			}	   
 };

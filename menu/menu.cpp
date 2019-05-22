@@ -35,12 +35,15 @@ void buyrider(){//买骑手
 		rider[i+1].exist=0;
 		if(i==1){//初始化,使nextmenuptr成为每个骑手订单链表的头指针 
 			rider[0].waitlist=creatmenulist();
+			rider[0].Path.init();
 			rider[i].waitlist=creatmenulist();
+			rider[1].Path.init();
 			rider[i].x=15;
 			rider[i].y=34;
 		}
 		else{ 
 			rider[i].waitlist=creatmenulist();
+			rider[i].Path.init();
 			rider[i].x=15;
 			rider[i].y=34;
 		}

@@ -10,7 +10,7 @@
 //#define The_ith(this,cnt) waitlist[cnt];
 
 //下面出现的this 是指向当前rider 的一个指针
-
+List transition;
 inline int min(int a,int b)
 {
 	return a<b? a:b;
@@ -57,7 +57,7 @@ int Rider::Calcuy(point* A,point* B)
 
 int Rider::CalculatePath(struct menu* newmenu){
     OldPath=Path;//先把现在的路径存下来 
-    Path.clear();
+	Path.clear();
     int Nowx = this->x;
     int Nowy = this->y;//取出骑手的坐标 
     point* ts = new point(Nowx,Nowy);//构造骑手point 
@@ -138,8 +138,8 @@ int Rider::CalculatePath(struct menu* newmenu){
     T += Path._size; 
 	
 	//交换现在的路径和原来的路径 
-    List transition = Path;
-    OldPath = Path; 
+    transition = Path;
+    OldPath = Path;
     Path = transition;
 	cnt = cnt-1;
     The_ith(this,cnt)->nextmenu=NULL;//从waitlist里面删除newmenu

@@ -79,14 +79,16 @@ int Rider::CalculatePath(struct menu* newmenu){
 	    GeneratePath(ts,newmenu,T);    
 	    point* A = new point(newmenu->x1, newmenu->y1);
 	     T += Manhatten(ts,A);
-             ts = A;
-            this->waitlist->nextmenu->get=1;//修改 
+             ts->x = Path.last()->x;//读取当前路径的最后一个点 
+             ts->y = Path.last()->y;
+            waitlist->nextmenu->get=1;
 	    //再送餐
 	    GeneratePath(ts,newmenu,T);
 	    point* B = new point(newmenu->x2, newmenu->y2);
 	    T += Manhatten(ts,B);
-            ts = B;
-            this->waitlist->nextmenu->reach=1;//修改 
+             ts->x = Path.last()->x;
+			 ts->y = Path.last()->y; //读取当前路径的最后一个点 
+            waitlist->nextmenu->reach=1; 
     }//只有新加入的订单一个单 
 	
 	
@@ -124,15 +126,17 @@ int Rider::CalculatePath(struct menu* newmenu){
                     {
                     	point* B = new point(The_ith(this,minid)->x1, The_ith(this,minid)->y1);
                         T += Manhatten(ts,B);
-                        ts = B;
-                         The_ith(this,minid)->get=1;
+                        ts->x = Path.last()->x;
+						ts->y = Path.last()->y;//读取当前路径的最后一个点 
+                        The_ith(this,minid)->get=1;
                     }
                 else 
                     {
                     	point* A = new point(The_ith(this,minid)->x2, The_ith(this,minid)->y2);
                         T += Manhatten(ts,A);
-                        ts = A;
-                         The_ith(this,minid)->reach=1;
+                        ts->x = Path.last()->x;
+						ts->y = Path.last()->y;//读取当前路径的最后一个点  
+                        The_ith(this,minid)->reach=1;
                     }                 
             }
     }
@@ -168,7 +172,7 @@ void Rider::generfunc(point* Now,struct menu* now,int disx,int disy,int idx,int 
 						{
 							ListNode* temp = new ListNode(Now->x,Now->y+dy*idy,T++);
 							Path.InsertAsl(temp);
-						}
+						} 
 				else{
 					int dy;
 						for(dy=8;dy<=disy-8;dy+=8)
@@ -258,8 +262,8 @@ void Rider::generfunc(point* Now,struct menu* now,int disx,int disy,int idx,int 
 
 void Rider::GeneratePath(point* Now,struct menu* now, int T)
 {
-	int Nowx = this->x;
-    int Nowy = this->y;//取出骑手的坐标 
+	int Nowx =Now->x;
+    int Nowy =Now->y;//取出骑手的坐标 
     point* ts = new point(Nowx,Nowy);//构造骑手point 
 	srand(time(NULL));
 	int disx,disy;
@@ -286,23 +290,26 @@ void Rider::GeneratePath(point* Now,struct menu* now, int T)
 								generfunc(Now,now,disx,disy,1,1,T);
 							}
 						}
-				
+				// 下一段已修改 
 					else if(Nowy==now->y1)//在正上方 
-					 	{
-					 		int id=1;
-					 		point* A1 = new point(now->x1,now->y1-4);
+					 	{  int idy;
+						 if(Nowy>4)
+					 		idy=1;	
+						 else
+						    idy=-1;
+					 		point* A1 = new point(now->x1,now->y1-4*idy);
 					 		disx = Calcux(ts,A1);
 							disy = Calcuy(ts,A1);
 							for(int dx=2;dx<=disx;dx+=4)
 								{
-									ListNode* temp = new ListNode(Now->x+dx*id,Now->y-4,++T);
+									ListNode* temp = new ListNode(Nowx+dx,Nowy-4*idy,++T);
 									Path.InsertAsl(temp);
 								}
-							ListNode* tmp = new ListNode(now->x1,now->y1,++T);
+							ListNode* tmp = new ListNode(now->x1,now->y1-4*idy,++T);
 							Path.InsertAsl(tmp);
 						 }
 						 
-					else if(Now->y<now->y1)//在右上方 
+					else if(Nowy>now->y1)//在右上方 
 						{
 							double probablity = rand() % (N + 1) / (float)(N + 1);
 							if(probablity<0.5)
@@ -318,10 +325,15 @@ void Rider::GeneratePath(point* Now,struct menu* now, int T)
 								generfunc(Now,now,disx,disy,1,-1,T);
 							}
 						}
-				}
-			else if(Now->x==now->x1){
+				}//下一段已修改 
+			else if(Nowx==now->x1){
+				int idx;
+				if(Nowx>2)
+					idx=1;
+				else 
+					idx=-1;
 				int id;
-				if(Now->y<now->y1) //正左方 
+				if(Nowy<now->y1) //正左方 
 					id=1;
 				else
 					id=-1;//正右
@@ -330,14 +342,15 @@ void Rider::GeneratePath(point* Now,struct menu* now, int T)
 				disy = Calcuy(ts,A1);
 				for(int dy=4;dy<=disy;dy+=8)
 					{
-						ListNode* temp = new ListNode(Now->x-2,Now->y+dy*id,T++);
+						ListNode* temp = new ListNode(Now->x-2*idx,Now->y+dy*id,T++);
 						Path.InsertAsl(temp);
 					}
-				ListNode* tmp = new ListNode(now->x1,now->y1,T);
+			
+				ListNode* tmp = new ListNode(now->x1,now->y1-4*id,T);
 				Path.InsertAsl(tmp);
 			} 	
-			else if(Now->x>now->x1){//在下方 
-					if(Now->y<now->y1)//左下方 
+			else if(Nowx>now->x1){//在下方 
+					if(Nowy<now->y1)//左下方 
 						{
 						 double probablity = rand() % (N + 1) / (float)(N + 1);
 					       if(probablity<0.5) 
@@ -352,21 +365,26 @@ void Rider::GeneratePath(point* Now,struct menu* now, int T)
 								disx = Calcux(ts,A2),disy = Calcuy(ts,A2);
 								generfunc(Now,now,disx,disy,-1,1,T);
 							}
-						}
-					else if(Now->y==now->y1){//正下方 
+						}//已修改 
+					else if(Nowy==now->y1){//正下方 
+						int idy;
+						if(Nowy>4)
+							idy=1;
+						else 
+							idy=-1;
 						int id=-1;
-					 		point* A1 = new point(now->x1,now->y1-4);
+					 		point* A1 = new point(now->x1,now->y1-4*idy);
 					 		disx = Calcux(ts,A1);
 							disy = Calcuy(ts,A1);
 							for(int dx=2;dx<=disx;dx+=4)
 								{
-									ListNode* tmp = new ListNode(Now->x+dx*id,Now->y-4,++T);
+									ListNode* tmp = new ListNode(Now->x+dx*id,Now->y-4*idy,++T);
 									Path.InsertAsl(tmp);
 								}
-							ListNode* tmp = new ListNode(now->x1,now->y1,++T);
+							ListNode* tmp = new ListNode(now->x1,now->y1-4*idy,++T);
 							Path.InsertAsl(tmp);
 					}
-					else if(Now->y>now->y1)//右下方 
+					else if(Nowy>now->y1)//右下方 
 						{
 							double probablity = rand() % (N + 1) / (float)(N + 1);
 							if(probablity<0.5)
@@ -386,7 +404,7 @@ void Rider::GeneratePath(point* Now,struct menu* now, int T)
 		}
 		
 	else if(now->get && !now->reach){
-				if(Nowx<now->x2)//在上方 
+				if(Nowx<now->x2)//骑手在订单上方 
 				{
 					if(Nowy<now->y2)//在左上方 
 						{
@@ -407,23 +425,28 @@ void Rider::GeneratePath(point* Now,struct menu* now, int T)
 								generfunc(Now,now,disx,disy,1,1,T);		
 							}
 						}
-					
-					else if(Now->y==now->y2)//在正上方
+					//xiu
+					else if(Nowy==now->y2)//在正上方
 					 	{
+					 	int idy;
+						 if(Nowy>4)
+					 		idy=1;	
+						 else
+						    idy=-1;
 					 		int id=1;
-					 		point* A2 = new point(now->x2,now->y2-4);
+					 		point* A2 = new point(now->x2,now->y2-4*idy);
 					 		disx = Calcux(ts,A2);
 							disy = Calcuy(ts,A2);
 							for(int dx=2;dx<=disx;dx+=4)
 								{
-									ListNode* tmp = new ListNode(Now->x+dx*id,Now->y-4,++T);
+									ListNode* tmp = new ListNode(Now->x+dx*id,Now->y-4*idy,++T);
 									Path.InsertAsl(tmp);
 								}
-							ListNode* tmp = new ListNode(now->x2,now->y2,++T);
+							ListNode* tmp = new ListNode(now->x2,now->y2-4*idy,++T);
 							Path.InsertAsl(tmp);
 						 }
 						 
-					else if(Now->y<now->y2)//在右上方 
+					else if(Nowy>now->y2)//在右上方 
 						{
 							double probablity = rand() % (N + 1) / (float)(N + 1);
 							if(probablity<0.5)
@@ -442,24 +465,28 @@ void Rider::GeneratePath(point* Now,struct menu* now, int T)
 							}
 						}
 				}
-				
-			else if(Now->x==now->x2){
+				//xiu
+			else if(Nowx==now->x2){
+				int idx;
+				if(Nowx>2)
+					idx=1;
+				else 
+					idx=-1;
 				int id;
-				if(Now->y<now->y2)
+				if(Nowy<now->y2)
 					id=1;
 				else
 					id=-1;//正右方 
-				//ListNode* temp = new ListNode(Now->x,Now->y,T++);
-				//Path.InsertAsl(temp);
+	
 		 		point* A2 = new point(now->x2,now->y2-4*id);
 		 		disx = Calcux(ts,A2);
 				disy = Calcuy(ts,A2);
-				for(int dy=4;dy<=disy;dy+=8)
+				for(int dy=8;dy<=disy;dy+=8)
 					{
-						ListNode* temp = new ListNode(Now->x-2,Now->y+dy*id,T++);
+						ListNode* temp = new ListNode(Now->x+2*idx,Now->y+dy*id,T++);
 						Path.InsertAsl(temp);
 					}
-				ListNode* tmp = new ListNode(now->x2,now->y2,T);
+				ListNode* tmp = new ListNode(now->x2,now->y2-4*id,T);
 				Path.InsertAsl(tmp);
 			}
 				
@@ -481,22 +508,27 @@ void Rider::GeneratePath(point* Now,struct menu* now, int T)
 								disy = Calcuy(ts,A2);
 								generfunc(Now,now,disx,disy,-1,1,T);		
 							}
-						}
+						}//xiu
 					else if(Nowy==now->y2)//在正下方
 					 	{
+					 		int idy;
+						if(Nowy>4)
+							idy=1;
+						else 
+							idy=-1;
 							int id=-1;
-					 		point* A2 = new point(now->x2,now->y2-4);
+					 		point* A2 = new point(now->x2,now->y2-4*idy);
 					 		disx = Calcux(ts,A2);
 							disy = Calcuy(ts,A2);
 							for(int dx=2;dx<=disx;dx+=4)
 								{
-									ListNode* tmp = new ListNode(Now->x+dx*id,Now->y-4,++T);
+									ListNode* tmp = new ListNode(Now->x+dx*id,Now->y-4*idy,++T);
 									Path.InsertAsl(tmp);
 								}
-							ListNode* tmp = new ListNode(now->x2,now->y2,++T);
+							ListNode* tmp = new ListNode(now->x2,now->y2-4*idy,++T);
 							Path.InsertAsl(tmp);
 						 }
-					else if(Now->y>now->y2)//右下方 
+					else if(Nowy>now->y2)//右下方 
 						{
 							double probablity = rand() % (N + 1) / (float)(N + 1);
 							if(probablity<0.5)

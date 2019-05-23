@@ -466,7 +466,7 @@ void Rider::GeneratePath(point* Now,struct menu* now, int T)
 						}
 				}
 				//xiu
-			else if(Nowx==now->x2){
+				else if(Nowx==now->x2){
 				int idx;
 				if(Nowx>2)
 					idx=1;
@@ -481,9 +481,9 @@ void Rider::GeneratePath(point* Now,struct menu* now, int T)
 		 		point* A2 = new point(now->x2,now->y2-4*id);
 		 		disx = Calcux(ts,A2);
 				disy = Calcuy(ts,A2);
-				for(int dy=8;dy<=disy;dy+=8)
+				for(int dy=4;dy<=disy;dy+=8)
 					{
-						ListNode* temp = new ListNode(Now->x+2*idx,Now->y+dy*id,T++);
+						ListNode* temp = new ListNode(Now->x-2*idx,Now->y+dy*id,++T);
 						Path.InsertAsl(temp);
 					}
 				ListNode* tmp = new ListNode(now->x2,now->y2-4*id,T);

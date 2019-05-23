@@ -93,13 +93,13 @@ void performance(){
 void deletelist(int menunum){//订单送到时删除该订单 
 	struct menu *tmp,*current,*previous;
 	current=rider[Menu[menunum].underline].waitlist; 
-//	for(;*current!=menu[menunum];current=current->nextmenu){//寻找到要删除的订单 
-//		previous=current;
-//	}
+	for(;current!=&Menu[menunum];current=current->nextmenu){//寻找到要删除的订单 
+		previous=current;
+	}
 	tmp=current;
 	current=current->nextmenu;
 	previous->nextmenu=current;
-	free(tmp);
+	//free(tmp);
 }
 
 struct menu* The_ith(Rider *A,int i){////返回骑手订单列表第几个订单 

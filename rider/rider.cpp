@@ -200,7 +200,6 @@ void Rider::generfunc(point* Now,struct menu* now,int disx,int disy,int idx,int 
 			else//y方向的距离不是8的倍数
 			{
 				int dy;
-				T = sysclock;
 				for(dy=8;dy<=(disy/8)*8;dy+=8)
 					{
 						ListNode* temp = new ListNode(Now->x,Now->y+dy*idy,++T);
@@ -228,7 +227,7 @@ void Rider::generfunc(point* Now,struct menu* now,int disx,int disy,int idx,int 
 						}
 				else{
 					int dx;
-					for(dx=4;dx<=disx;dx+=4)
+					for(dx=4;dx<=disx-4;dx+=4)
 						{
 							ListNode* temp = new ListNode(Now->x+dx*idx,Now->y,++T);
 							Path.InsertAsl(temp);
@@ -251,7 +250,6 @@ void Rider::generfunc(point* Now,struct menu* now,int disx,int disy,int idx,int 
 			else//x方向的距离不是4的倍数
 			{
 				int dx;
-				T = sysclock;
 				for(dx=4;dx<=(disx/4)*4;dx+=4)
 					{
 						ListNode* temp = new ListNode(Now->x+dx*idx,Now->y,++T);
@@ -301,7 +299,7 @@ void Rider::GeneratePath(point* Now,struct menu* now, int T)
 				// 下一段已修改 
 					else if(Nowy==now->y1)//在正上方 
 					 	{  int idy;
-						 if(Nowy>4)
+						 if(Nowy>8)
 					 		idy=1;	
 						 else
 						    idy=-1;
@@ -336,7 +334,7 @@ void Rider::GeneratePath(point* Now,struct menu* now, int T)
 				}//下一段已修改 
 			else if(Nowx==now->x1){
 				int idx;
-				if(Nowx>2)
+				if(Nowx>4)
 					idx=1;
 				else 
 					idx=-1;
@@ -376,7 +374,7 @@ void Rider::GeneratePath(point* Now,struct menu* now, int T)
 						}//已修改 
 					else if(Nowy==now->y1){//正下方 
 						int idy;
-						if(Nowy>4)
+						if(Nowy>10)
 							idy=1;
 						else 
 							idy=-1;
@@ -437,7 +435,7 @@ void Rider::GeneratePath(point* Now,struct menu* now, int T)
 					else if(Nowy==now->y2)//在正上方
 					 	{
 					 	int idy;
-						 if(Nowy>4)
+						 if(Nowy>10)
 					 		idy=1;	
 						 else
 						    idy=-1;
@@ -476,7 +474,7 @@ void Rider::GeneratePath(point* Now,struct menu* now, int T)
 				//xiu
 			else if(Nowx==now->x2){
 				int idx;
-				if(Nowx>2)
+				if(Nowx>4)
 					idx=1;
 				else 
 					idx=-1;
@@ -520,7 +518,7 @@ void Rider::GeneratePath(point* Now,struct menu* now, int T)
 					else if(Nowy==now->y2)//在正下方
 					 	{
 					 		int idy;
-						if(Nowy>4)
+						if(Nowy>10)
 							idy=1;
 						else 
 							idy=-1;

@@ -19,6 +19,7 @@ class Rider;
 			struct menu *nextmenu;
 			int truereach;
 			int trueget;
+			int trueovertime;
 		};
 	
 	void buyrider();//买骑手

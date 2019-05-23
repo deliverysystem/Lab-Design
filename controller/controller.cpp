@@ -10,7 +10,7 @@
 #include <windows.h>
 //全局变量： 
 int sysclock=0;
-int money=1000;
+int money=700;
 struct menu Menu[301]={0};	//订单动态数组 
 Rider rider[100];		//骑手动态数组 
 int Graph[100][100];
@@ -44,7 +44,20 @@ void start()
 	FILE *fp=fopen("outputs.txt","w");						//输出文件 
 	FILE *fw=fopen("seles.txt","r"); //打开文件 
 	for(;value==1;sysclock++){	 			//大循环，控制整个进程 
-
+	//
+		for(j=0;j<size;j++){
+			if(Menu[j].truereach!=1&&sysclock-Menu[j].endtime>=30){		//破产 
+				money=-100;
+				if(money<0)					
+					break;
+			}
+			else if(Menu[j].truereach!=1&&sysclock-Menu[j].endtime>=0){	//超时罚款50,超时数+1 
+					money-=50;
+					Message.totalovertime+=1;
+					Menu[j].p->overtime+=1;
+					Menu[j].trueovertime=1;
+			}
+		}
 		//1、判断是否破产 
 		boolnumber=bankruptcy(money);	
 		if(boolnumber==0)
@@ -66,7 +79,10 @@ void start()
 				Menu[size].p=NULL;
 				Menu[size].get=0;
 				Menu[size].reach=0;
-				Menu[size].underline=0;					
+				Menu[size].underline=0;
+				Menu[size].truereach=0;
+				Menu[size].trueget=0;
+				Menu[size].trueovertime=0;					
 			}
 			fscanf(fw,"%d",&Menu[size].x1);
 			fscanf(fw,"%d",&Menu[size].y1);
@@ -93,30 +109,19 @@ void start()
 		}								
 		//5、判断是否到达送餐点，判断是否超时,采用遍历订单的方法 
 		for(j=0;j<size;j++){				
-			if(((Menu[j].x1-2)==(Menu[j].p)->x&&Menu[j].y1==(Menu[j].p)->y)||(Menu[j].x1==(Menu[j].p)->x&&(Menu[j].y1+4)==(Menu[j].p)->y)||(Menu[j].x1==(Menu[j].p)->x&&(Menu[j].y1-4)==(Menu[j].p)->y)||((Menu[j].x1+2)==(Menu[j].p)->x&&(Menu[j].y1)==(Menu[j].p)->y)&&Menu[j].get==0){ //骑手到达接餐地 
+			if((((Menu[j].x1-2)==(Menu[j].p)->x&&Menu[j].y1==(Menu[j].p)->y)||(Menu[j].x1==(Menu[j].p)->x&&(Menu[j].y1+4)==(Menu[j].p)->y)||(Menu[j].x1==(Menu[j].p)->x&&(Menu[j].y1-4)==(Menu[j].p)->y)||((Menu[j].x1+2)==(Menu[j].p)->x&&(Menu[j].y1)==(Menu[j].p)->y))&&(Menu[j].trueget==0)){ //骑手到达接餐地 
 				Menu[j].trueget=1;
 			}
-			if(((Menu[j].x2-2)==(Menu[j].p)->x&&Menu[j].y2==(Menu[j].p)->y)||(Menu[j].x2==(Menu[j].p)->x&&(Menu[j].y2+4)==(Menu[j].p)->y)||(Menu[j].x2==(Menu[j].p)->x&&(Menu[j].y2-4)==(Menu[j].p)->y)||((Menu[j].x2+2)==(Menu[j].p)->x&&(Menu[j].y2)==(Menu[j].p)->y)&&Menu[j].get==1){	//骑手到达送餐地 
-				if(sysclock-Menu[j].endtime>=60){		//破产 
-					money=-100;
-					boolnumber=bankruptcy(money);
-					if(boolnumber==0)	
-						break;
-				}
-				else if(sysclock-Menu[j].endtime>=30){	//超时罚款50,超时数+1 
-					money-=50;
-					Message.totalovertime+=1;
-					Menu[j].truereach=1;
-					Menu[j].p->overtime+=1;
-			 		deletelist(j);
-				}
-				else{						//送餐成功，钱数加10,完成数+1 
+			if((((Menu[j].x2-2)==(Menu[j].p)->x&&Menu[j].y2==(Menu[j].p)->y)||(Menu[j].x2==(Menu[j].p)->x&&(Menu[j].y2+4)==(Menu[j].p)->y)||(Menu[j].x2==(Menu[j].p)->x&&(Menu[j].y2-4)==(Menu[j].p)->y)||((Menu[j].x2+2)==(Menu[j].p)->x&&(Menu[j].y2)==(Menu[j].p)->y))&&(Menu[j].trueget==1)&&(Menu[j].truereach!=1))	//骑手到达送餐地 
+			{						//送餐成功，钱数加10,完成数+1 
+				if(Menu[j].trueovertime==0){
+					
 					money+=10;
-					Message.accomplish+=1;
-					Menu[j].truereach=1;
-					Menu[j].p->achieve+=1;
-					deletelist(j);
-				} 	
+				}
+				Message.accomplish+=1;
+				Menu[j].truereach=1;
+				Menu[j].p->achieve+=1;
+				deletelist(j);
 			} 
 		}
 		if(boolnumber==0)
@@ -140,12 +145,12 @@ void start()
 		fprintf(fp,"超时数：%d\n",Message.totalovertime);
 		//9、如果所有订单完成，跳出循环
 		for(j=0;j<size;j++){
-			if(Menu[j].reach==0)
+			if(Menu[j].truereach==0)
 			 	break;
 		}
 		if(j==size&&state==1)
 			break; 			//订单数组中的所有订单都完成了，跳出循环。	
-		Sleep(1200); 
+		Sleep(1000); 
 	}
 	fclose(fw);				//关闭文件
 	fclose(fp);
@@ -177,7 +182,8 @@ void printmove()
 			n=rider[i].Path.header->next->y;
 			ListNode* temp=rider[i].Path.header->next;					//删除第一个节点 
 			rider[i].Path.header->next=rider[i].Path.header->next->next;
-			rider[i].Path.header->next->pred=rider[i].Path.header;			
+			rider[i].Path.header->next->pred=rider[i].Path.header;		
+			rider[i].Path._size--;	
 			free(temp);															
 			a.changeposi(rider[i].x,rider[i].y);
 			a.clear();         				//清除骑手原位置 

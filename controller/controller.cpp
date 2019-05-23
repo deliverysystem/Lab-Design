@@ -51,7 +51,7 @@ void start()
 				if(money<0)					
 					break;
 			}
-			else if(Menu[j].truereach!=1&&sysclock-Menu[j].endtime>=0){	//超时罚款50,超时数+1 
+			else if(Menu[j].trueovertime==0&&Menu[j].truereach!=1&&sysclock-Menu[j].endtime>=0){	//超时罚款50,超时数+1 
 					money-=50;
 					Message.totalovertime+=1;
 					Menu[j].p->overtime+=1;
@@ -150,7 +150,7 @@ void start()
 		}
 		if(j==size&&state==1)
 			break; 			//订单数组中的所有订单都完成了，跳出循环。	
-		Sleep(1000); 
+		Sleep(500); 
 	}
 	fclose(fw);				//关闭文件
 	fclose(fp);

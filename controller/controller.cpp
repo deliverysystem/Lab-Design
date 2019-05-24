@@ -47,10 +47,10 @@ void start()
 	int o=0;
 	int i=0;
 	//初始化message
-	SetCursorPosition(9,80);
+	SetCursorPosition(9,82);
 	SetColor(FOREGROUND_INTENSITY|FOREGROUND_RED);
 	printf("KFC：餐厅");
-	SetCursorPosition(14,80); 
+	SetCursorPosition(14,82); 
 	SetColor(FOREGROUND_INTENSITY|FOREGROUND_BLUE);
 	printf("BYR：食客"); 
 	SetColor(FOREGROUND_INTENSITY);

@@ -14,6 +14,13 @@ int money=700;
 struct menu Menu[301]={0};	//订单动态数组 
 Rider rider[100];		//骑手动态数组 
 int Graph[100][100];
+struct stop{
+			int ridern;
+			int name;
+			int x;
+			int y;
+			int flag;
+		};
 void start()
 {
 	SetWindowSize(140,120);			//原图为78*51 
@@ -26,7 +33,8 @@ void start()
 	rider[0].exist=1;
 	rider[1].exist=0;		//x,y具体待补充 ,rider[i].A.changeposi(x,y);
 	int boolnumber=0;				//判断是否破产使用 
-	int j=0;			
+	int j=0;	
+	int i=0;		
 	int number=0;		//读文件中的序号 
 	int size=0;      //控制订单数组的大小 
 	int righttime=0;   //判断是否到达接单时刻 
@@ -34,6 +42,9 @@ void start()
 	int state=0;	//记录是否接完了所有单 
 	Map a;
 	a.init();		//绘制地图
+	int p=0;
+	int q=0;
+	int o=0;
 	//初始化message
 	SetCursorPosition(40,0); 
 	struct message Message;
@@ -44,7 +55,15 @@ void start()
 	FILE *fp=fopen("outputs.txt","w");						//输出文件 
 	FILE *fw=fopen("seles.txt","r"); //打开文件 
 	for(;value==1;sysclock++){	 			//大循环，控制整个进程 
-	//
+	//		 
+		int rightnowfinish[300]={0};
+		int rightnowticket[300]={0};
+		struct stop Stop[2]={0};
+		Stop[0].ridern=-1;
+		Stop[1].ridern=-1;
+		p=0;
+		q=0;
+		o=0;
 		for(j=0;j<size;j++){
 			if(Menu[j].truereach!=1&&sysclock-Menu[j].endtime>=30){		//破产 
 				money=-100;
@@ -56,6 +75,8 @@ void start()
 					Message.totalovertime+=1;
 					Menu[j].p->overtime+=1;
 					Menu[j].trueovertime=1;
+					rightnowticket[q]=j+1;
+					q++;
 			}
 		}
 		//1、判断是否破产 
@@ -111,21 +132,53 @@ void start()
 		for(j=0;j<size;j++){				
 			if((((Menu[j].x1-2)==(Menu[j].p)->x&&Menu[j].y1==(Menu[j].p)->y)||(Menu[j].x1==(Menu[j].p)->x&&(Menu[j].y1+4)==(Menu[j].p)->y)||(Menu[j].x1==(Menu[j].p)->x&&(Menu[j].y1-4)==(Menu[j].p)->y)||((Menu[j].x1+2)==(Menu[j].p)->x&&(Menu[j].y1)==(Menu[j].p)->y))&&(Menu[j].trueget==0)){ //骑手到达接餐地 
 				Menu[j].trueget=1;
+				Stop[o].flag=1; 
+				Stop[o].x=Menu[j].x1;
+				Stop[o].y=Menu[j].y1;
+				Stop[o].name=1; //1是餐馆 
+				Stop[o].ridern = Menu[j].underline;
+				o++; 
 			}
 			if((((Menu[j].x2-2)==(Menu[j].p)->x&&Menu[j].y2==(Menu[j].p)->y)||(Menu[j].x2==(Menu[j].p)->x&&(Menu[j].y2+4)==(Menu[j].p)->y)||(Menu[j].x2==(Menu[j].p)->x&&(Menu[j].y2-4)==(Menu[j].p)->y)||((Menu[j].x2+2)==(Menu[j].p)->x&&(Menu[j].y2)==(Menu[j].p)->y))&&(Menu[j].trueget==1)&&(Menu[j].truereach!=1))	//骑手到达送餐地 
 			{						//送餐成功，钱数加10,完成数+1 
 				if(Menu[j].trueovertime==0){
-					
 					money+=10;
 				}
+				if(Stop[o-1].x==Menu[j].x2&&Stop[o-1].y==Menu[j].y2)//如果stop中前一个的坐标与餐馆坐标相等，则是餐客 
+					Stop[o-1].name=3; //3是餐客 
+				else{
+					Stop[o].ridern = Menu[j].underline;
+					Stop[o].flag = 1;
+					Stop[o].x=Menu[j].x2;
+					Stop[o].y=Menu[j].y2;
+					Stop[o].name=2; //2是食客
+					o++;
+				} 
+				
 				Message.accomplish+=1;
 				Menu[j].truereach=1;
 				Menu[j].p->achieve+=1;
-				deletelist(j);
+				rightnowfinish[p]=j+1;
+				p++;
+				deletelist(j); 
 			} 
 		}
 		if(boolnumber==0)
 			break;
+			
+		for(j=0;rider[j].exist==1;j++){
+			fprintf(fp,"骑手%d的位置: %d, %d; 停靠:",j+1,(rider[j].x-1)/2,(rider[j].y-2)/4);//2*rider[i].x+1,4*rider[i].y+2
+		for(i=0;Stop[i].ridern==j&&Stop[i].flag!=0;i++){
+			if(Stop[i].name==1)
+				fprintf(fp,"餐馆 "); 
+			else if(Stop[i].name==2)
+				fprintf(fp,"食客 "); 
+			else
+				fprintf(fp,"餐客 ");
+			fprintf(fp,"%d %d ",(Stop[i].x-1)/2,(Stop[i].y-2)/4);
+		}
+			fprintf(fp,";\n");
+		} 	
 		//6、对骑手进行移动 
 		if(size!=0)								//此处改动 
 			printmove();
@@ -136,13 +189,27 @@ void start()
 		//7、打印当前信息 
 		printmessage(Message);
 		//8、将当前信息输入到文件中
-		fprintf(fp,"当前时刻：%d\n",sysclock);
-		for(j=0;rider[j].exist==1;j++){
-			fprintf(fp,"骑手%d的位置:(%d,%d)\n",j+1,(rider[j].x-1)/2,(rider[j].y-2)/4);//2*rider[i].x+1,4*rider[i].y+2
-		} 
+		fprintf(fp,"时间：%d\n",sysclock);
+		fprintf(fp,"钱：%d\n",money);
 		fprintf(fp,"接单数：%d\n",Message.sum);
-		fprintf(fp,"完成数：%d\n",Message.accomplish);
-		fprintf(fp,"超时数：%d\n",Message.totalovertime);
+		fprintf(fp,"完成数：%d;结单：",Message.accomplish);
+		for(i=0;rightnowfinish[i]!=0;i++){
+			if(rightnowticket[i+1]==0)
+				fprintf(fp,"%d",rightnowfinish[i]);
+			else
+				fprintf(fp,"%d ",rightnowfinish[i]);
+		}
+		fprintf(fp,";\n");
+		fprintf(fp,"超时数：%d;罚单: ",Message.totalovertime);
+		for(i=0;rightnowticket[i]!=0;i++){
+			if(rightnowticket[i+1]==0)
+				fprintf(fp,"%d",rightnowticket[i]);
+			else
+				fprintf(fp,"%d ",rightnowticket[i]);
+		}
+		fprintf(fp,";\n");
+	
+		
 		//9、如果所有订单完成，跳出循环
 		for(j=0;j<size;j++){
 			if(Menu[j].truereach==0)

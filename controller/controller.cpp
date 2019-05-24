@@ -234,19 +234,39 @@ void start()
 			}
 		}
 		fprintf(fp,";\n");
+		int cyc,qqq=0;
 		for(j=0;rider[j].exist==1;j++){
 			fprintf(fp,"骑手%d的位置: %d, %d; 停靠:",j+1,(rider[j].x-1)/2,(rider[j].y-2)/4);//2*rider[i].x+1,4*rider[i].y+2
-		for(i=0;Stop[i].flag!=0;i++){
-			if(Stop[i].ridern==j){
-				if(Stop[i].name==1)
-				fprintf(fp,"餐馆 "); 
-			else if(Stop[i].name==2)
-				fprintf(fp,"食客 "); 
-			else
-				fprintf(fp,"餐客 ");
-			fprintf(fp,"%d %d ",(Stop[i].x-1)/2,(Stop[i].y-2)/4);
+			for(i=0;Stop[i].flag!=0;i++){
+				if(Stop[i].ridern==j){
+					if(Stop[i].name==1){
+						for(cyc=i;Stop[cyc].flag==1;cyc++){
+							if(Stop[cyc].name==2&&Stop[cyc].ridern==j){
+								fprintf(fp,"餐客 ");
+								qqq=1;
+								Stop[cyc].name=3;
+							}
+						}
+						if(qqq==0)
+							fprintf(fp,"餐厅 ");
+					}
+					if(Stop[i].name==2){
+						for(cyc=i;Stop[cyc].flag==1;cyc++){
+							if(Stop[cyc].name==1&&Stop[cyc].ridern==j){
+								fprintf(fp,"餐客 ");
+								qqq=1;
+								Stop[cyc].name=3;
+							}
+						}
+						if(qqq==0)
+							fprintf(fp,"食客 "); 
+					}	
+					if(Stop[i].name ==3)
+						fprintf(fp,"餐客 "); 
+					fprintf(fp,"%d %d ",(Stop[i].x-1)/2,(Stop[i].y-2)/4);
+					qqq=0;
+					}
 				}
-			}
 			fprintf(fp,";\n");
 		} 	
 		//8、对骑手进行移动 

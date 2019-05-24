@@ -47,7 +47,13 @@ void start()
 	int o=0;
 	int i=0;
 	//初始化message
-	SetCursorPosition(40,0); 
+	SetCursorPosition(9,80);
+	SetColor(FOREGROUND_INTENSITY|FOREGROUND_RED);
+	printf("KFC：餐厅");
+	SetCursorPosition(14,80); 
+	SetColor(FOREGROUND_INTENSITY|FOREGROUND_BLUE);
+	printf("BYR：食客"); 
+	SetColor(FOREGROUND_INTENSITY);
 	struct message Message;
 	Message.messagemoney=money;
 	Message.accomplish=0;		//完成数 
@@ -116,12 +122,15 @@ void start()
 			Menu[size].x2=2*Menu[size].x2+1;
 			Menu[size].y2=4*Menu[size].y2+2;
 			SetCursorPosition(Menu[size].x1,Menu[size].y1-1);
+			SetColor(FOREGROUND_INTENSITY|FOREGROUND_RED);
 			printf("KFC");
 			SetCursorPosition(Menu[size].x2,Menu[size].y2-1); 
-			printf("BYR");			
+			SetColor(FOREGROUND_INTENSITY|FOREGROUND_BLUE);
+			printf("BYR");
+			SetColor(FOREGROUND_INTENSITY);			
 			size++;											
 			Message.sum+=1;					//接单数+1	 
-			//4、分配订单 
+		//4、分配订单 
 			allocatemenu(size-1);		//size-1为此刻新接订单在订单数组中的下标 
 			if(feof(fw)==0){
 				fscanf(fw,"%d",&number);
@@ -187,13 +196,16 @@ void start()
 		{
 			if(Menu[j].trueget!=1){
 				SetCursorPosition(Menu[j].x1,Menu[j].y1-1);
+				SetColor(FOREGROUND_INTENSITY|FOREGROUND_RED);
 				printf("KFC");
 			}
 			if(Menu[j].truereach!=1){
 				SetCursorPosition(Menu[j].x2,Menu[j].y2-1);
+				SetColor(FOREGROUND_INTENSITY|FOREGROUND_BLUE);
 				printf("BYR");
 			}
 		} 
+		SetColor(FOREGROUND_INTENSITY);
 		//7、将信息输入到文件中
 		fprintf(fp,"时间：%d\n",sysclock);
 		fprintf(fp,"钱：%d\n",money);
@@ -237,35 +249,25 @@ void start()
 			}
 			fprintf(fp,";\n");
 		} 	
-		//6、对骑手进行移动 
+		//8、对骑手进行移动 
 		if(size!=0)								//此处改动 
 			printmove();
 		else{
+			SetColor(FOREGROUND_INTENSITY|FOREGROUND_RED|FOREGROUND_GREEN);
 			point a(15,34);
 			a.PrintRider();
+			SetColor(FOREGROUND_INTENSITY);
 		} 
-		//7、打印当前信息 
+		//9、打印当前信息 
 		printmessage(Message);
-		//8、将当前信息输入到文件中
-		
-	/*	fprintf(fp,"当前时刻：%d\n",sysclock);
-		for(j=0;rider[j].exist==1;j++){
-			fprintf(fp,"骑手%d的位置:(%d,%d)\n",j+1,(rider[j].x-1)/2,(rider[j].y-2)/4);//2*rider[i].x+1,4*rider[i].y+2
-		} 
-		fprintf(fp,"接单数：%d\n",Message.sum);
-		fprintf(fp,"完成数：%d\n",Message.accomplish);
-		fprintf(fp,"超时数：%d\n",Message.totalovertime);
-		*/
-		
-		
-		//9、如果所有订单完成，跳出循环
+		//10、如果所有订单完成，跳出循环
 		for(j=0;j<size;j++){
 			if(Menu[j].truereach==0)
 			 	break;
 		}
 		if(j==size&&state==1)
 			break; 			//订单数组中的所有订单都完成了，跳出循环。	
-		Sleep(500); 
+		Sleep(1000); 
 	}
 	fclose(fw);				//关闭文件
 	fclose(fp);
@@ -276,7 +278,7 @@ int bankruptcy(int money)   //判断当前是否破产
 {
 	int i;
 	if(money<0){
-		SetCursorPosition(40,0);
+		SetCursorPosition(34,0);
 		performance();		
 		return 0;
 	}
@@ -307,7 +309,9 @@ void printmove()
 	}
 	for(i=0;rider[i].exist==1;i++)
 	{
+		SetColor(FOREGROUND_INTENSITY|FOREGROUND_RED|FOREGROUND_GREEN);
 		a.changeposi(rider[i].x,rider[i].y);
 		a.PrintRider();
+		SetColor(FOREGROUND_INTENSITY);
 	}
 }

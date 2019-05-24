@@ -33,8 +33,7 @@ void start()
 	rider[0].exist=1;
 	rider[1].exist=0;		//x,y具体待补充 ,rider[i].A.changeposi(x,y);
 	int boolnumber=0;				//判断是否破产使用 
-	int j=0;	
-	int i=0;		
+	int j=0;			
 	int number=0;		//读文件中的序号 
 	int size=0;      //控制订单数组的大小 
 	int righttime=0;   //判断是否到达接单时刻 
@@ -45,6 +44,7 @@ void start()
 	int p=0;
 	int q=0;
 	int o=0;
+	int i=0;
 	//初始化message
 	SetCursorPosition(40,0); 
 	struct message Message;
@@ -55,7 +55,7 @@ void start()
 	FILE *fp=fopen("outputs.txt","w");						//输出文件 
 	FILE *fw=fopen("seles.txt","r"); //打开文件 
 	for(;value==1;sysclock++){	 			//大循环，控制整个进程 
-	//		 
+	//
 		int rightnowfinish[300]={0};
 		int rightnowticket[300]={0};
 		struct stop Stop[2]={0};
@@ -86,8 +86,8 @@ void start()
 		//2、买骑手的函数
 		buyrider();														
 		//3、读文件并分配订单 
-		for(;sysclock==righttime&&(!feof(fw));){			//判断是否到达接单时刻且文件没有读完 
-			if(sysclock==0){
+		for(;sysclock==(righttime+1)&&(!feof(fw));){			//判断是否到达接单时刻且文件没有读完 
+			if(sysclock==1){
 				fscanf(fw,"%d",&number);
 				fscanf(fw,"%d",&righttime);
 				break;										//此处改动 
@@ -114,9 +114,13 @@ void start()
 			Menu[size].x1=2*Menu[size].x1+1;
 			Menu[size].y1=4*Menu[size].y1+2;
 			Menu[size].x2=2*Menu[size].x2+1;
-			Menu[size].y2=4*Menu[size].y2+2;				
+			Menu[size].y2=4*Menu[size].y2+2;
+			SetCursorPosition(Menu[size].x1,Menu[size].y1);
+			printf("餐");
+			SetCursorPosition(Menu[size].x2,Menu[size].y2); 
+			printf("客");			
 			size++;											
-			Message.sum+=1;					//接单数+1
+			Message.sum+=1;					//接单数+1	 
 			//4、分配订单 
 			allocatemenu(size-1);		//size-1为此刻新接订单在订单数组中的下标 
 			if(feof(fw)==0){
@@ -138,10 +142,13 @@ void start()
 				Stop[o].name=1; //1是餐馆 
 				Stop[o].ridern = Menu[j].underline;
 				o++; 
+				SetCursorPosition(Menu[j].x1,Menu[j].y1);
+				printf("  ");
 			}
 			if((((Menu[j].x2-2)==(Menu[j].p)->x&&Menu[j].y2==(Menu[j].p)->y)||(Menu[j].x2==(Menu[j].p)->x&&(Menu[j].y2+4)==(Menu[j].p)->y)||(Menu[j].x2==(Menu[j].p)->x&&(Menu[j].y2-4)==(Menu[j].p)->y)||((Menu[j].x2+2)==(Menu[j].p)->x&&(Menu[j].y2)==(Menu[j].p)->y))&&(Menu[j].trueget==1)&&(Menu[j].truereach!=1))	//骑手到达送餐地 
 			{						//送餐成功，钱数加10,完成数+1 
 				if(Menu[j].trueovertime==0){
+					
 					money+=10;
 				}
 				if(Stop[o-1].x==Menu[j].x2&&Stop[o-1].y==Menu[j].y2)//如果stop中前一个的坐标与餐馆坐标相等，则是餐客 
@@ -154,41 +161,29 @@ void start()
 					Stop[o].name=2; //2是食客
 					o++;
 				} 
-				
+				SetCursorPosition(Menu[j].x2,Menu[j].y2);
+				printf("  ");
 				Message.accomplish+=1;
 				Menu[j].truereach=1;
 				Menu[j].p->achieve+=1;
 				rightnowfinish[p]=j+1;
 				p++;
-				deletelist(j); 
+				deletelist(j);
 			} 
 		}
-		if(boolnumber==0)
-			break;
-			
-		for(j=0;rider[j].exist==1;j++){
-			fprintf(fp,"骑手%d的位置: %d, %d; 停靠:",j+1,(rider[j].x-1)/2,(rider[j].y-2)/4);//2*rider[i].x+1,4*rider[i].y+2
-		for(i=0;Stop[i].ridern==j&&Stop[i].flag!=0;i++){
-			if(Stop[i].name==1)
-				fprintf(fp,"餐馆 "); 
-			else if(Stop[i].name==2)
-				fprintf(fp,"食客 "); 
-			else
-				fprintf(fp,"餐客 ");
-			fprintf(fp,"%d %d ",(Stop[i].x-1)/2,(Stop[i].y-2)/4);
-		}
-			fprintf(fp,";\n");
-		} 	
-		//6、对骑手进行移动 
-		if(size!=0)								//此处改动 
-			printmove();
-		else{
-			point a(15,34);
-			a.PrintRider();
-		}	
-		//7、打印当前信息 
-		printmessage(Message);
-		//8、将当前信息输入到文件中
+		//防止消除其他单的餐客
+		for(j=0;j<size;j++)
+		{
+			if(Menu[j].trueget!=1){
+				SetCursorPosition(Menu[size].x1,Menu[size].y1);
+				printf("餐");
+			}
+			if(Menu[j].truereach!=1){
+				SetCursorPosition(Menu[size].x2,Menu[size].y2);
+				printf("客");
+			}
+		} 
+		//将信息输入到文件中
 		fprintf(fp,"时间：%d\n",sysclock);
 		fprintf(fp,"钱：%d\n",money);
 		fprintf(fp,"接单数：%d\n",Message.sum);
@@ -208,7 +203,39 @@ void start()
 				fprintf(fp,"%d ",rightnowticket[i]);
 		}
 		fprintf(fp,";\n");
-	
+		for(j=0;rider[j].exist==1;j++){
+			fprintf(fp,"骑手%d的位置: %d, %d; 停靠:",j+1,(rider[j].x-1)/2,(rider[j].y-2)/4);//2*rider[i].x+1,4*rider[i].y+2
+		for(i=0;Stop[i].ridern==j&&Stop[i].flag!=0;i++){
+			if(Stop[i].name==1)
+				fprintf(fp,"餐馆 "); 
+			else if(Stop[i].name==2)
+				fprintf(fp,"食客 "); 
+			else
+				fprintf(fp,"餐客 ");
+			fprintf(fp,"%d %d ",(Stop[i].x-1)/2,(Stop[i].y-2)/4);
+		}
+			fprintf(fp,";\n");
+		} 	
+		//6、对骑手进行移动 
+		if(size!=0)								//此处改动 
+			printmove();
+		else{
+			point a(15,34);
+			a.PrintRider();
+		} 
+		//7、打印当前信息 
+		printmessage(Message);
+		//8、将当前信息输入到文件中
+		
+	/*	fprintf(fp,"当前时刻：%d\n",sysclock);
+		for(j=0;rider[j].exist==1;j++){
+			fprintf(fp,"骑手%d的位置:(%d,%d)\n",j+1,(rider[j].x-1)/2,(rider[j].y-2)/4);//2*rider[i].x+1,4*rider[i].y+2
+		} 
+		fprintf(fp,"接单数：%d\n",Message.sum);
+		fprintf(fp,"完成数：%d\n",Message.accomplish);
+		fprintf(fp,"超时数：%d\n",Message.totalovertime);
+		*/
+		
 		
 		//9、如果所有订单完成，跳出循环
 		for(j=0;j<size;j++){
@@ -245,23 +272,21 @@ void printmove()
 	point a; 
 	for(i=0;rider[i].exist==1;i++){
 		if(rider[i].Path.header->next!=rider[i].Path.tailer){
+			a.changeposi(rider[i].x,rider[i].y);
+			a.clear();
 			m=rider[i].Path.header->next->x;				//rider[i]的行驶路线中的下个一点，读出它的坐标 
 			n=rider[i].Path.header->next->y;
 			ListNode* temp=rider[i].Path.header->next;					//删除第一个节点 
 			rider[i].Path.header->next=rider[i].Path.header->next->next;
 			rider[i].Path.header->next->pred=rider[i].Path.header;		
 			rider[i].Path._size--;	
-			free(temp);															
-			a.changeposi(rider[i].x,rider[i].y);
-			a.clear();         				//清除骑手原位置 
-			a.changeposi(m,n);
-			a.PrintRider();  				//打印骑手图案函数
+			free(temp);
 			rider[i].changeposi(m,n);
 		}
-		else{								//若骑手当前路径链表里只有一个节点 
-			a.x=rider[i].x;
-			a.y=rider[i].y;
-			a.PrintRider();
-		}
-	}	
+	}
+	for(i=0;rider[i].exist==1;i++)
+	{
+		a.changeposi(rider[i].x,rider[i].y);
+		a.PrintRider();
+	}
 }

@@ -20,6 +20,7 @@ struct stop{
 			int x;
 			int y;
 			int flag;
+			int iscan;
 		};
 void start()
 {
@@ -55,10 +56,9 @@ void start()
 	FILE *fp=fopen("outputs.txt","w");						//输出文件 
 	FILE *fw=fopen("seles.txt","r"); //打开文件 
 	for(;value==1;sysclock++){	 			//大循环，控制整个进程 
-	//
 		int rightnowfinish[300]={0};
 		int rightnowticket[300]={0};
-		struct stop Stop[2]={0};
+		struct stop Stop[310]={0};
 		Stop[0].ridern=-1;
 		Stop[1].ridern=-1;
 		p=0;
@@ -141,6 +141,7 @@ void start()
 				Stop[o].y=Menu[j].y1;
 				Stop[o].name=1; //1是餐馆 
 				Stop[o].ridern = Menu[j].underline;
+				Stop[o].iscan =1;
 				o++; 
 				SetCursorPosition(Menu[j].x1,Menu[j].y1);
 				printf("  ");
@@ -151,8 +152,18 @@ void start()
 					
 					money+=10;
 				}
-				if(Stop[o-1].x==Menu[j].x2&&Stop[o-1].y==Menu[j].y2)//如果stop中前一个的坐标与餐馆坐标相等，则是餐客 
-					Stop[o-1].name=3; //3是餐客 
+				if(o>=1){
+						if(Stop[o-1].x==Stop[o].x&&Stop[o-1].y==Stop[o].y)//如果stop中前一个的坐标与餐馆坐标相等，则是餐客 
+							Stop[o-1].name=3; //3是餐客
+						else{
+							Stop[o].ridern = Menu[j].underline;
+							Stop[o].flag = 1;
+							Stop[o].x=Menu[j].x2;
+							Stop[o].y=Menu[j].y2;
+							Stop[o].name=2; //2是食客
+							o++;
+						} 
+				}
 				else{
 					Stop[o].ridern = Menu[j].underline;
 					Stop[o].flag = 1;
@@ -175,11 +186,11 @@ void start()
 		for(j=0;j<size;j++)
 		{
 			if(Menu[j].trueget!=1){
-				SetCursorPosition(Menu[size].x1,Menu[size].y1);
+				SetCursorPosition(Menu[j].x1,Menu[j].y1);
 				printf("餐");
 			}
 			if(Menu[j].truereach!=1){
-				SetCursorPosition(Menu[size].x2,Menu[size].y2);
+				SetCursorPosition(Menu[j].x2,Menu[j].y2);
 				printf("客");
 			}
 		} 
@@ -189,18 +200,26 @@ void start()
 		fprintf(fp,"接单数：%d\n",Message.sum);
 		fprintf(fp,"完成数：%d;结单：",Message.accomplish);
 		for(i=0;rightnowfinish[i]!=0;i++){
-			if(rightnowticket[i+1]==0)
-				fprintf(fp,"%d",rightnowfinish[i]);
-			else
+			if(rightnowticket[i+1]==0){
 				fprintf(fp,"%d ",rightnowfinish[i]);
+				fprintf(fp," ");
+			}
+			else{
+				fprintf(fp,"%d ",rightnowfinish[i]);
+				fprintf(fp," ");
+			}
 		}
 		fprintf(fp,";\n");
 		fprintf(fp,"超时数：%d;罚单: ",Message.totalovertime);
 		for(i=0;rightnowticket[i]!=0;i++){
-			if(rightnowticket[i+1]==0)
+			if(rightnowticket[i+1]==0){
 				fprintf(fp,"%d",rightnowticket[i]);
-			else
+				fprintf(fp," ");
+			}
+			else{
 				fprintf(fp,"%d ",rightnowticket[i]);
+				fprintf(fp," ");
+			}
 		}
 		fprintf(fp,";\n");
 		for(j=0;rider[j].exist==1;j++){

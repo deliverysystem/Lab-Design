@@ -2,6 +2,7 @@
 #define MAP_H
 #include "point.h"
 #include <iostream>
+#include <graphics.h>
 #include"controller.h"
 using namespace std;
 
@@ -16,6 +17,7 @@ class Map{
    		    {
   	 	        point c(x,y);
    	 	        c.Printmap();
+   	 	        i++;
     		}
     	for(i=0;i<=99;i++)				//将地图上所有点全部标记为1 
     		for(j=0;j<=99;j++){

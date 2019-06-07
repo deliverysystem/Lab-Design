@@ -19,8 +19,8 @@ int money=700;
 struct menu Menu[301]={0};	//订单动态数组 
 Rider rider[100];		//骑手动态数组 
 int Graph[100][100];
-int size=0;
-int oldsize=0;
+int size=0;				//订单数量，新增的全局变量 
+int oldsize=0;			//鼠标输入时要用的，判断是否新增订单 
 struct stop{
 			int ridern;
 			int name;
@@ -31,34 +31,31 @@ struct stop{
 		};		
 unsigned __stdcall start(void* pArguments)
 {
-	
+	struct message Message;			//MESSAGE 初始化 
+	Message.messagemoney=money;
+	Message.accomplish=0;		//完成数 
+	Message.totalovertime=0;			//超时数 
+	Message.sum=0;	
 			//接单数
 	SetWindowSize(140,120);			//原图为78*51  
-	//限定骑手起始位置
-	rider[0].receive =0;
-	rider[0].achieve=0;
-	rider[0].overtime=0;
-	rider[0].x=15;									
-	rider[0].y=34;
-	rider[0].exist=1;
-	rider[1].exist=0;		//x,y具体待补充 ,rider[i].A.changeposi(x,y);
+	
 	int boolnumber=0;				//判断是否破产使用 
 	int j=0;			
 	int number=0;		//读文件中的序号 
-	int size=0;      //控制订单数组的大小 
+	//int size=0;      //控制订单数组的大小 
 	int righttime=0;   //判断是否到达接单时刻 
 	int value=1;
 	int state=0;	//记录是否接完了所有单 
 	Map a;
-	a.init();		//绘制地图。。。。。。需要增改为动画版本 
+	a.init();		//绘制地图。。。。。 动画的地图绘制在cartonn里 
 	int p=0;
 	int q=0;
 	int o=0;
 	int i=0;
-	FILE *fw=fopen("seles.txt","r"); //打开文件 
+	FILE *fw=fopen("3.txt","r"); //打开文件 
 	FILE *fp=fopen("outputs.txt","w");      //输出文件 
 	for(;is_run()&&value==1;delay_fps(60)){	 			//大循环，控制整个进程 
-		WaitForSingleObject(hMutex,INFINITE);
+		WaitForSingleObject(hMutex,INFINITE);			//线程互斥语句 ，相当于上锁 
 		
 		
 		int rightnowfinish[300]={0};
@@ -77,11 +74,7 @@ unsigned __stdcall start(void* pArguments)
 		SetColor(FOREGROUND_INTENSITY|FOREGROUND_BLUE);
 		printf("BYR：食客"); 
 		SetColor(FOREGROUND_INTENSITY);
-		struct message Message;
-		Message.messagemoney=money;
-		Message.accomplish=0;		//完成数 
-		Message.totalovertime=0;			//超时数 
-		Message.sum=0;	
+		
 		for(j=0;j<size;j++){
 			if(Menu[j].truereach!=1&&sysclock-Menu[j].endtime>=30){		//破产 
 				money=-100;
@@ -102,9 +95,9 @@ unsigned __stdcall start(void* pArguments)
 		if(boolnumber==0)
 			break;
 		//2、买骑手的函数
-		buyrider();				
-		//3.分配订单
-		/*if(oldsize!=size){			//如果没有新订单加入就不分配订单,有问题						
+		//buyrider();			//移到cattoon 
+		/*//3.分配订单
+		if(oldsize!=size){			//如果没有新订单加入就不分配订单,有问题,鼠标分配				
 			Message.sum +=1;
 		}		
 		xyprintf(0,100,"OLDSIZE = %d",oldsize);
@@ -148,6 +141,7 @@ unsigned __stdcall start(void* pArguments)
 			SetColor(FOREGROUND_INTENSITY);			
 			size++;											
 			Message.sum+=1;					//接单数+1	 
+			
 		//4、分配订单 
 			allocatemenu(size-1);		//size-1为此刻新接订单在订单数组中的下标 
 			if(feof(fw)==0){
@@ -158,7 +152,7 @@ unsigned __stdcall start(void* pArguments)
 				state=1; 
 				break;
 			}
-		}															
+		}														
 		//5、判断是否到达送餐点，判断是否超时,采用遍历订单的方法 
 		for(j=0;j<size;j++){				
 			if((((Menu[j].x1-2)==(Menu[j].p)->x&&Menu[j].y1==(Menu[j].p)->y)||(Menu[j].x1==(Menu[j].p)->x&&(Menu[j].y1+4)==(Menu[j].p)->y)||(Menu[j].x1==(Menu[j].p)->x&&(Menu[j].y1-4)==(Menu[j].p)->y)||((Menu[j].x1+2)==(Menu[j].p)->x&&(Menu[j].y1)==(Menu[j].p)->y))&&(Menu[j].trueget==0)){ //骑手到达接餐地 
@@ -288,16 +282,16 @@ unsigned __stdcall start(void* pArguments)
 				}
 			fprintf(fp,";\n");
 		} 
-		//7、对骑手进行移动 
+		//7、对骑手进行移动 ，等鼠标输入时删掉该部分						 
 		 if(size!=0)								//此处改动 
 			printmove();
 		else{
 			SetColor(FOREGROUND_INTENSITY|FOREGROUND_RED|FOREGROUND_GREEN);
 			point a(15,34);
 			a.PrintRider();
+			carprint(a.x,a.y,0);
 			SetColor(FOREGROUND_INTENSITY);
-		} 
-		
+		}
 		//9、打印当前信息 
 		printmessage(Message); 			//需要增添动画功能 
 		//10、如果所有订单完成，跳出循环
@@ -307,9 +301,9 @@ unsigned __stdcall start(void* pArguments)
 		}
 		if(j==size&&state==1)
 			break; 			//订单数组中的所有订单都完成了，跳出循环。	
-		Sleep(1000); 
+		Sleep(1000);
 		sysclock++;
-		ReleaseMutex(hMutex);
+		ReleaseMutex(hMutex);		//解锁 
 	}		
 	fclose(fw);				//关闭文件
 	fclose(fp);	//关闭文件

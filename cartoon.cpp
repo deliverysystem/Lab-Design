@@ -10,6 +10,12 @@
 #include"point.h"
 #include"message.h"
 mouse_msg msg={0};
+void printcartoonmessage(struct message a){
+	xyprintf(900,160,"%d",sysclock);
+	xyprintf(945,610,"%d",money);
+	xyprintf(920,290,"%d/%d",a.accomplish,a.sum);
+	xyprintf(850,440,"%d",a.totalovertime);
+}
 void initimg(){//对骑手的IMG初始化 
 	int i;
 	for(i=0;rider[i].exist ==1;i++){
@@ -34,7 +40,6 @@ void clearrider(int x,int y,int i){//清除骑手上一个位置的图像，有�
 }
 void carprint(int x,int y,int i){
 	//打印骑手 
-	
 	if(((y-2)/4*41)%2==0){				//如果骑手在横轴上 
 		//cleardevice(rider[i].Riderimg);
 		getimage(rider[i].Riderimg,"C:/Users/ASUS/Desktop/9.jpg");
@@ -86,7 +91,7 @@ void printmove()
 		if(rider[i].Path.header->next!=rider[i].Path.tailer){
 			a.changeposi(rider[i].x,rider[i].y);
 			a.clear();
-			clearrider(a.x,a.y,i);							//清除骑手当前位置的图像 
+			//clearrider(a.x,a.y,i);							//清除骑手当前位置的图像 
 			m=rider[i].Path.header->next->x;				//rider[i]的行驶路线中的下个一点，读出它的坐标 
 			n=rider[i].Path.header->next->y;
 			ListNode* temp=rider[i].Path.header->next;					//删除第一个节点 
@@ -99,7 +104,6 @@ void printmove()
 	}
 	for(i=0;rider[i].exist==1;i++)
 	{
-		
 		SetColor(FOREGROUND_INTENSITY|FOREGROUND_RED|FOREGROUND_GREEN);
 		a.changeposi(rider[i].x,rider[i].y);
 		a.PrintRider();
@@ -114,27 +118,6 @@ unsigned __stdcall getinput(void* pArguments){
 	int initflag=1;
 	/*setcolor(RED);
 	setfont(-30, 0,"宋体");*/
-	
-	//1.打印地图 ，地图只打印一次 
-		PIMAGE img=newimage();
-		getimage(img,"C:/Users/ASUS/Desktop/map2.jpg"); 
-		
-		int pwidth = 1100, pheight = 720;
-		//Resize image to pwidth*pheight
-		PIMAGE save=gettarget();
-		//Get image size
-		settarget(img); 
-		int width,height;
-		width=getwidth();
-		height=getheight();
-		settarget(save); 
-		PIMAGE backproc=newimage(pwidth,pheight);
-		//Resize
-		putimage(backproc,0,0,pwidth,pheight,img,0,0,width,height); 
-		getimage(img,backproc,0,0,pwidth,pheight);
-		delimage(backproc);
-		
-		putimage(0,0,img);
 		
 	//限定骑手起始位置,将初始化移到这，解决了下面buyrider的问题，说明不同线程之间变量不能共用 
 	rider[0].receive =0;
@@ -207,16 +190,29 @@ unsigned __stdcall getinput(void* pArguments){
 		oldflag2=flag2;
 		
 		
-		xyprintf(0,50,"SIZE = %d",size);
-		{
-			char str[20];
-			sprintf(str, "fps %.02f", getfps()); //调用getfps取得当前帧率
-			setcolor(WHITE);
-			outtextxy(0, 0, str);
-		}
+	
+		//2.打印地图 ，地图只打印一次 
+		PIMAGE img=newimage();
+		getimage(img,"C:/Users/ASUS/Desktop/map2.jpg"); 
 		
+		int pwidth = 1100, pheight = 720;
+		//Resize image to pwidth*pheight
+		PIMAGE save=gettarget();
+		//Get image size
+		settarget(img); 
+		int width,height;
+		width=getwidth();
+		height=getheight();
+		settarget(save); 
+		PIMAGE backproc=newimage(pwidth,pheight);
+		//Resize
+		putimage(backproc,0,0,pwidth,pheight,img,0,0,width,height); 
+		getimage(img,backproc,0,0,pwidth,pheight);
+		delimage(backproc);
+		
+		putimage(0,0,img);
 		//3.打印骑手 ,等文件输入没问题后，删除文件输入的相关部分，再调用这个部分 
-		/*if(size!=0)							
+		if(size!=0)							
 			printmove();                                       
 		else{
 			SetColor(FOREGROUND_INTENSITY|FOREGROUND_RED|FOREGROUND_GREEN);
@@ -224,7 +220,16 @@ unsigned __stdcall getinput(void* pArguments){
 			a.PrintRider();
 			carprint(a.x,a.y,0);
 			SetColor(FOREGROUND_INTENSITY);	
-		}*/
+		}
+		
+		xyprintf(0,50,"SIZE = %d",size);
+		char str[20];
+		sprintf(str, "fps %.02f", getfps()); //调用getfps取得当前帧率
+		setcolor(WHITE);
+		outtextxy(0, 0, str);
+		
+		printcartoonmessage(Message);
+		Sleep(1000);
 		ReleaseMutex(hMutex);
 	}
 	release();

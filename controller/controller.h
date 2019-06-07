@@ -6,7 +6,7 @@ extern int bankruptcy(int );//判断是否破产
 unsigned __stdcall start(void* pArguments);
 
 
-
+extern struct message Message;
 extern HANDLE hMutex;
 extern int size;
 extern int oldsize;

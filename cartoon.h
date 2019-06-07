@@ -8,4 +8,5 @@ extern void printmove();//对骑手进行移动
 void initimg();//对骑手的IMG初始化 
 void clearrider(int ,int ,int );//清除骑手上一个位置的图像，有问题，在一些点会有残影 
 void release(); //程序结束时释放骑手的IMG 
+void printcartoonmessage(struct message);
 #endif

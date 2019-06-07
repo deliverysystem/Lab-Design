@@ -3,47 +3,25 @@
 #include"tools.h"
 #include"message.h"
 #include"controller.h" 
+	
 void printmessage(struct message a){
 	int i;
 	int j;
-	for(i=28;i<=32;i++){
-		int j=76; 
-		SetCursorPosition(i,j);
-		printf("                                        ");
-	}
-	SetCursorPosition(27,76);
-	printf("————————————");
-	SetCursorPosition(33,76);
-	printf("————————————");
-	SetCursorPosition(28,76);
-	printf("|");
-	SetCursorPosition(29,76);
-	printf("|");
-	SetCursorPosition(30,76);
-	printf("|");
-	SetCursorPosition(31,76);
-	printf("|");
-	SetCursorPosition(32,76);
-	printf("|");
-	SetCursorPosition(28,99);
-	printf("|");
-	SetCursorPosition(29,99);
-	printf("|");
-	SetCursorPosition(30,99);
-	printf("|");
-	SetCursorPosition(31,99);
-	printf("|");
-	SetCursorPosition(32,99);
-	printf("|");
-	SetCursorPosition(28,78);
+	for(i=17;i<=21;i++)
+		for(j=74;j<=94;j++)
+		{
+			SetCursorPosition(i,j);
+			printf(" ");
+		}
+	SetCursorPosition(17,74);
 	printf("当前时刻：%d	",sysclock);
-	SetCursorPosition(29,78);
+	SetCursorPosition(18,74);
 	printf("当前钱数：%d\n",money);
-	SetCursorPosition(30,78);
+	SetCursorPosition(19,74);
 	printf("接单数：%d\n",a.sum);
-	SetCursorPosition(31,78);
+	SetCursorPosition(20,74);
 	printf("完成数：%d\n",a.accomplish);
-	SetCursorPosition(32,78);
+	SetCursorPosition(21,74);
 	printf("超时数：%d\n",a.totalovertime);
-	SetCursorPosition(26,87);
+	SetCursorPosition(16,74);
 }

@@ -1,328 +1,238 @@
-#include<stdio.h>
-#include<stdlib.h>
-#include <windows.h>
 #include <graphics.h>
 #include <process.h> 
+#include<stdio.h>
+#include<stdlib.h>
 
 #include"controller.h"
-#include"point.h"
-#include"tools.h"
-#include"message.h"
-#include"rider.h"
-#include"map.h"
-#include"menu.h" 
+#include"menu.h"
 #include"cartoon.h"
-//全局变量： 
-HANDLE hMutex=CreateMutex(NULL,FALSE,NULL);
-int sysclock=0;
-int money=700;
-struct menu Menu[301]={0};	//订单动态数组 
-Rider rider[100];		//骑手动态数组 
-int Graph[100][100];
-int size=0;				//订单数量，新增的全局变量 
-int oldsize=0;			//鼠标输入时要用的，判断是否新增订单 
-struct stop{
-			int ridern;
-			int name;
-			int x;
-			int y;
-			int flag;
-			int iscan;
-		};		
-unsigned __stdcall start(void* pArguments)
+#include"rider.h"
+#include"point.h"
+#include"message.h"
+mouse_msg msg={0};
+void printcartoonmessage(struct message a){
+	xyprintf(900,160,"%d",sysclock);
+	xyprintf(945,610,"%d",money);
+	xyprintf(920,290,"%d/%d",a.accomplish,a.sum);
+	xyprintf(850,440,"%d",a.totalovertime);
+}
+void initimg(){//对骑手的IMG初始化 
+	int i;
+	for(i=0;rider[i].exist ==1;i++){
+		rider[i].Riderimg =newimage();
+	}
+}
+void release(){//程序结束时释放骑手的IMG 
+	int i;
+	for(i=0;rider[i].exist ==1;i++){
+		delimage(rider[i].Riderimg);
+	}
+}
+void clearrider(int x,int y,int i){//清除骑手上一个位置的图像，有问题，在一些点会有残影 ,还会把骑手也清掉，使骑手无法显示 
+	setfillcolor(BLACK);			//用矩形达到清除的目的 
+	if(((y-2)/4*41)%2==0){
+		bar((y-2)/4*41,(x-1)/2*41+17,(y-2)/4*41+57,(x-1)/2*41+17+23);
+	}
+	else{
+		bar((y-2)/4*41+17,(x-1)/2*41,(y-2)/4*41+17+23,(x-1)/2*41+57);
+	}
+	cleardevice(rider[i].Riderimg);
+}
+void carprint(int x,int y,int i){
+	//打印骑手 
+	if(((y-2)/4*41)%2==0){				//如果骑手在横轴上 
+		//cleardevice(rider[i].Riderimg);
+		getimage(rider[i].Riderimg,"C:/Users/ASUS/Desktop/9.jpg");
+		int pwidth1 =57,pheight1=23;
+		//1.照片缩放 
+		PIMAGE save1=gettarget();
+		//Get image size
+		settarget(rider[i].Riderimg); 
+		int width1,height1;
+		width1=getwidth();
+		height1=getheight();
+		settarget(save1); 
+		PIMAGE backproc1=newimage(pwidth1,pheight1);
+		//Resize
+		putimage(backproc1,0,0,pwidth1,pheight1,rider[i].Riderimg,0,0,width1,height1); 
+		getimage(rider[i].Riderimg,backproc1,0,0,pwidth1,pheight1);
+		delimage(backproc1);
+		//2.打印骑手 
+		putimage((y-2)/4*41,(x-1)/2*41+17,rider[i].Riderimg);
+	}
+	else{
+		getimage(rider[i].Riderimg,"C:/Users/ASUS/Desktop/8.jpg");
+		int pwidth1 =23,pheight1=57;
+		
+		PIMAGE save1=gettarget();
+		//Get image size
+		settarget(rider[i].Riderimg); 
+		int width1,height1;
+		width1=getwidth();
+		height1=getheight();
+		settarget(save1); 
+		PIMAGE backproc1=newimage(pwidth1,pheight1);
+		//Resize
+		putimage(backproc1,0,0,pwidth1,pheight1,rider[i].Riderimg,0,0,width1,height1); 
+		getimage(rider[i].Riderimg,backproc1,0,0,pwidth1,pheight1);
+		delimage(backproc1);
+		
+		putimage((y-2)/4*41+17,(x-1)/2*41,rider[i].Riderimg);
+	}
+}
+
+void printmove()
 {
-	struct message Message;			//MESSAGE 初始化 
-	Message.messagemoney=money;
-	Message.accomplish=0;		//完成数 
-	Message.totalovertime=0;			//超时数 
-	Message.sum=0;	
-			//接单数
-	SetWindowSize(140,120);			//原图为78*51  
-	
-	int boolnumber=0;				//判断是否破产使用 
-	int j=0;			
-	int number=0;		//读文件中的序号 
-	//int size=0;      //控制订单数组的大小 
-	int righttime=0;   //判断是否到达接单时刻 
-	int value=1;
-	int state=0;	//记录是否接完了所有单 
-	Map a;
-	a.init();		//绘制地图。。。。。 动画的地图绘制在cartonn里 
-	int p=0;
-	int q=0;
-	int o=0;
-	int i=0;
-	FILE *fw=fopen("3.txt","r"); //打开文件 
-	FILE *fp=fopen("outputs.txt","w");      //输出文件 
-	for(;is_run()&&value==1;delay_fps(60)){	 			//大循环，控制整个进程 
-		WaitForSingleObject(hMutex,INFINITE);			//线程互斥语句 ，相当于上锁 
-		
-		
-		int rightnowfinish[300]={0};
-		int rightnowticket[300]={0};
-		struct stop Stop[310]={0};
-		Stop[0].ridern=-1;
-		Stop[1].ridern=-1;
-		p=0;
-		q=0;
-		o=0;
-		i=0;
-		SetCursorPosition(9,82);
-		SetColor(FOREGROUND_INTENSITY|FOREGROUND_RED);
-		printf("KFC：餐厅");
-		SetCursorPosition(14,82); 
-		SetColor(FOREGROUND_INTENSITY|FOREGROUND_BLUE);
-		printf("BYR：食客"); 
+	int i;
+	int m;
+	int n;
+	point a; 
+	for(i=0;rider[i].exist==1;i++){
+		if(rider[i].Path.header->next!=rider[i].Path.tailer){
+			a.changeposi(rider[i].x,rider[i].y);
+			a.clear();
+			//clearrider(a.x,a.y,i);							//清除骑手当前位置的图像 
+			m=rider[i].Path.header->next->x;				//rider[i]的行驶路线中的下个一点，读出它的坐标 
+			n=rider[i].Path.header->next->y;
+			ListNode* temp=rider[i].Path.header->next;					//删除第一个节点 
+			rider[i].Path.header->next=rider[i].Path.header->next->next;
+			rider[i].Path.header->next->pred=rider[i].Path.header;		
+			rider[i].Path._size--;	
+			free(temp);
+			rider[i].changeposi(m,n);
+		}
+	}
+	for(i=0;rider[i].exist==1;i++)
+	{
+		SetColor(FOREGROUND_INTENSITY|FOREGROUND_RED|FOREGROUND_GREEN);
+		a.changeposi(rider[i].x,rider[i].y);
+		a.PrintRider();
+		carprint(a.x,a.y,i);
 		SetColor(FOREGROUND_INTENSITY);
+	}
+}
+unsigned __stdcall getinput(void* pArguments){
+	WaitForSingleObject(hMutex,INFINITE);
+	int flag1,flag2,i=0,j=0;//flag1,2,是用来判断订单输入的 
+	int oldflag1=0,oldflag2=0;
+	int initflag=1;
+	/*setcolor(RED);
+	setfont(-30, 0,"宋体");*/
 		
-		for(j=0;j<size;j++){
-			if(Menu[j].truereach!=1&&sysclock-Menu[j].endtime>=30){		//破产 
-				money=-100;
-				if(money<0)					
-					break;
-			}
-			else if(Menu[j].trueovertime==0&&Menu[j].truereach!=1&&sysclock-Menu[j].endtime>=0){	//超时罚款50,超时数+1 
-					money-=50;
-					Message.totalovertime+=1;
-					Menu[j].p->overtime+=1;
-					Menu[j].trueovertime=1;
-					rightnowticket[q]=j+1;
-					q++;
-			}
+	//限定骑手起始位置,将初始化移到这，解决了下面buyrider的问题，说明不同线程之间变量不能共用 
+	rider[0].receive =0;
+	rider[0].achieve=0;
+	rider[0].overtime=0;
+	rider[0].x=15;									
+	rider[0].y=34;
+	rider[0].exist=1;
+	rider[1].exist=0;		//x,y具体待补充 ,rider[i].A.changeposi(x,y);
+	for(;is_run();delay_fps(60)){
+		
+		
+		/*static PIMAGE page = NULL;//绘图层2，用于刷新画面,好像没用 
+		if (page == NULL) {
+		page = newimage(1100, 720);
+		setbkcolor(WHITE);
 		}
-		//1、判断是否破产 
-		boolnumber=bankruptcy(money);	
-		if(boolnumber==0)
-			break;
-		//2、买骑手的函数
-		//buyrider();			//移到cattoon 
-		/*//3.分配订单
-		if(oldsize!=size){			//如果没有新订单加入就不分配订单,有问题,鼠标分配				
-			Message.sum +=1;
-		}		
-		xyprintf(0,100,"OLDSIZE = %d",oldsize);
-		oldsize=size;*/
-		//3、读文件并分配订单 
-		for(;sysclock==(righttime+1)&&(!feof(fw));){			//判断是否到达接单时刻且文件没有读完 
-			if(sysclock==1){
-				fscanf(fw,"%d",&number);
-				fscanf(fw,"%d",&righttime);
-				break;										//此处改动 
-			} 
-			if(size!=0){
-				Menu[size].x1=0;						//初始化新增加的订单 
-				Menu[size].y1=0;
-				Menu[size].x2=0;
-				Menu[size].y2=0;
-				Menu[size].p=NULL;
-				Menu[size].get=0;
-				Menu[size].reach=0;
-				Menu[size].underline=0;
-				Menu[size].truereach=0;
-				Menu[size].trueget=0;
-				Menu[size].trueovertime=0;					
-			}
-			fscanf(fw,"%d",&Menu[size].x1);
-			fscanf(fw,"%d",&Menu[size].y1);
-			fscanf(fw,"%d",&Menu[size].x2);
-			fscanf(fw,"%d",&Menu[size].y2);
-			Menu[size].endtime=righttime+30;
-			//坐标变换
-			Menu[size].x1=2*Menu[size].x1+1;
-			Menu[size].y1=4*Menu[size].y1+2;
-			Menu[size].x2=2*Menu[size].x2+1;
-			Menu[size].y2=4*Menu[size].y2+2;
-			SetCursorPosition(Menu[size].x1,Menu[size].y1-1);
-			SetColor(FOREGROUND_INTENSITY|FOREGROUND_RED);
-			printf("KFC");
-			SetCursorPosition(Menu[size].x2,Menu[size].y2-1); 
-			SetColor(FOREGROUND_INTENSITY|FOREGROUND_BLUE);
-			printf("BYR");
-			SetColor(FOREGROUND_INTENSITY);			
-			size++;											
-			Message.sum+=1;					//接单数+1	 
-			
-		//4、分配订单 
-			allocatemenu(size-1);		//size-1为此刻新接订单在订单数组中的下标 
-			if(feof(fw)==0){
-				fscanf(fw,"%d",&number);
-				fscanf(fw,"%d",&righttime);	
-			}
-			if(feof(fw)!=0){
-				state=1; 
-				break;
-			}
-		}														
-		//5、判断是否到达送餐点，判断是否超时,采用遍历订单的方法 
-		for(j=0;j<size;j++){				
-			if((((Menu[j].x1-2)==(Menu[j].p)->x&&Menu[j].y1==(Menu[j].p)->y)||(Menu[j].x1==(Menu[j].p)->x&&(Menu[j].y1+4)==(Menu[j].p)->y)||(Menu[j].x1==(Menu[j].p)->x&&(Menu[j].y1-4)==(Menu[j].p)->y)||((Menu[j].x1+2)==(Menu[j].p)->x&&(Menu[j].y1)==(Menu[j].p)->y))&&(Menu[j].trueget==0)){ //骑手到达接餐地 
-				Menu[j].trueget=1;
-				Stop[o].flag=1; 
-				Stop[o].x=Menu[j].x1;
-				Stop[o].y=Menu[j].y1;
-				Stop[o].name=1; //1是餐馆 
-				Stop[o].ridern = Menu[j].underline;
-				Stop[o].iscan =1;
-				o++; 
-				SetCursorPosition(Menu[j].x1,Menu[j].y1-1);
-				printf("   ");
-			}
-			if((((Menu[j].x2-2)==(Menu[j].p)->x&&Menu[j].y2==(Menu[j].p)->y)||(Menu[j].x2==(Menu[j].p)->x&&(Menu[j].y2+4)==(Menu[j].p)->y)||(Menu[j].x2==(Menu[j].p)->x&&(Menu[j].y2-4)==(Menu[j].p)->y)||((Menu[j].x2+2)==(Menu[j].p)->x&&(Menu[j].y2)==(Menu[j].p)->y))&&(Menu[j].trueget==1)&&(Menu[j].truereach!=1))	//骑手到达送餐地 
-			{						//送餐成功，钱数加10,完成数+1 
-				if(Menu[j].trueovertime==0){
-					
-					money+=10;
-				}
-				if(o>=1){
-						if(Stop[o-1].x==Stop[o].x&&Stop[o-1].y==Stop[o].y)//如果stop中前一个的坐标与餐馆坐标相等，则是餐客 
-							Stop[o-1].name=3; //3是餐客
-						else{
-							Stop[o].ridern = Menu[j].underline;
-							Stop[o].flag = 1;
-							Stop[o].x=Menu[j].x2;
-							Stop[o].y=Menu[j].y2;
-							Stop[o].name=2; //2是食客
-							o++;
-						} 
-				}
-				else{
-					
-					Stop[o].ridern = Menu[j].underline;
-					Stop[o].flag = 1;
-					Stop[o].x=Menu[j].x2;
-					Stop[o].y=Menu[j].y2;
-					Stop[o].name=2; //2是食客
-					o++;
-				} 
-				SetCursorPosition(Menu[j].x2,Menu[j].y2-1);
-				printf("   ");
-				Message.accomplish+=1;
-				Menu[j].truereach=1;
-				Menu[j].p->achieve+=1;
-				rightnowfinish[p]=j+1;
-				p++;
-				deletelist(j);
-			} 
+		cleardevice(page);
+		settarget(page);
+		setbkcolor(0xFCFCFC);
+		settarget(NULL);*/
+		//2.买骑手，不知道为啥就只买了一个骑手，但只剩100块钱,在调用buyrider前钱数为700，调用完为100，说明买了但骑手不知为何只有1。。。 
+		 
+		buyrider();	
+		/*j=0;        //测试现在有多少骑手 
+		for(i=0;rider[i].exist ==1;i++){
+			j++;
+		} 
+		xyprintf(720,50,"钱数=%d",money);
+		xyprintf(720,100,"骑手数量=%d",j);*/
+		
+		if(initflag==1){//只初始化一次 
+			initimg();
+			initflag=0;
 		}
-		//6、防止消除其他单的餐客
-		for(j=0;j<size;j++)
+		
+		//1.订单输入 
+		while (mousemsg())
 		{
-			if(Menu[j].trueget!=1){
-				SetCursorPosition(Menu[j].x1,Menu[j].y1-1);
-				SetColor(FOREGROUND_INTENSITY|FOREGROUND_RED);
-				printf("KFC");
-			}
-			if(Menu[j].truereach!=1){
-				SetCursorPosition(Menu[j].x2,Menu[j].y2-1);
-				SetColor(FOREGROUND_INTENSITY|FOREGROUND_BLUE);
-				printf("BYR");
-			}
-		} 
-		SetColor(FOREGROUND_INTENSITY);
-		//7、将信息输入到文件中
-		fprintf(fp,"时间：%d\n",sysclock);
-		fprintf(fp,"钱：%d\n",money);
-		fprintf(fp,"接单数：%d\n",Message.sum);
-		fprintf(fp,"完成数：%d;结单：",Message.accomplish);
-		for(i=0;rightnowfinish[i]!=0;i++){
-			if(rightnowfinish[i+1]==0){
-				fprintf(fp,"%d ",rightnowfinish[i]);
-				fprintf(fp," ");
-			}
-			else{
-				fprintf(fp,"%d ",rightnowfinish[i]);
-				fprintf(fp," ");
-			}
+			msg = getmouse();
 		}
-		fprintf(fp,";\n");
-		fprintf(fp,"超时数：%d;罚单: ",Message.totalovertime);
-		for(i=0;rightnowticket[i]!=0;i++){
-			if(rightnowticket[i+1]==0){
-				fprintf(fp,"%d",rightnowticket[i]);
-				fprintf(fp," ");
-			}
-			else{
-				fprintf(fp,"%d ",rightnowticket[i]);
-				fprintf(fp," ");
-			}
+		
+		flag1=(int)msg.is_down();
+		flag2=(int)msg.is_up();
+		if(flag1!=oldflag1&&flag1==1&&(msg.y/27/3)%2==0&&(msg.x/27/3)%2==0){//如果鼠标点下 且是房子 
+			Menu[size].y1=msg.x/27/3;//动画的xy与控制台的相反 
+			Menu[size].x1=msg.y/27/3;
+			Menu[size].x1=4*Menu[size].x1+2;
+			Menu[size].y1=2*Menu[size].y1+1;	
+			outtextxy((msg.x/27/3*2+msg.x/27/3)*27,(msg.y/27/3*2+msg.y/27/3)*27,"下单");//后期可以改为贴图 
 		}
-		fprintf(fp,";\n");
-		int cyc,qqq=0;
-		for(j=0;rider[j].exist==1;j++){
-			fprintf(fp,"骑手%d的位置: %d, %d; 停靠:",j+1,(rider[j].x-1)/2,(rider[j].y-2)/4);//2*rider[i].x+1,4*rider[i].y+2
-			for(i=0;Stop[i].flag!=0;i++){
-				if(Stop[i].ridern==j){
-					if(Stop[i].name==1){
-						for(cyc=i;Stop[cyc].flag==1;cyc++){
-							if(Stop[cyc].name==2&&Stop[cyc].ridern==j){
-								fprintf(fp,"餐客 ");
-								qqq=1;
-								Stop[cyc].name=3;
-							}
-						}
-						if(qqq==0)
-							fprintf(fp,"餐厅 ");
-					}
-					if(Stop[i].name==2){
-						for(cyc=i;Stop[cyc].flag==1;cyc++){
-							if(Stop[cyc].name==1&&Stop[cyc].ridern==j){
-								fprintf(fp,"餐客 ");
-								qqq=1;
-								Stop[cyc].name=3;
-							}
-						}
-						if(qqq==0)
-							fprintf(fp,"食客 "); 
-					}	
-					if(Stop[i].name ==3)
-						fprintf(fp,"餐客 "); 
-					fprintf(fp,"%d %d ",(Stop[i].x-1)/2,(Stop[i].y-2)/4);
-					qqq=0;
-					}
-				}
-			fprintf(fp,";\n");
-		} 
-		//7、对骑手进行移动 ，等鼠标输入时删掉该部分						 
-		 if(size!=0)								//此处改动 
-			printmove();
+		oldflag1=flag1;
+		if(flag2==1&&flag2!=oldflag2&&(msg.y/27/3)%2==0&&(msg.x/27/3)%2==0){//与上面相同 
+			Menu[size].p=NULL;
+			Menu[size].get=0;
+			Menu[size].reach=0;
+			Menu[size].underline=0;
+			Menu[size].truereach=0;
+			Menu[size].trueget=0;
+			Menu[size].trueovertime=0;
+			Menu[size].x2=msg.y/27/3;
+			Menu[size].y2=msg.x/27/3;
+			Menu[size].x2=4*Menu[size].x2+2;
+			Menu[size].y2=2*Menu[size].y2+1;	
+			Menu[size].endtime=sysclock+30;
+			size++;
+			allocatemenu(size-1);//size-1为此刻新接订单在订单数组中的下标 
+			outtextxy((msg.x/27/3*2+msg.x/27/3)*27,(msg.y/27/3*2+msg.y/27/3)*27,"下单");
+		}
+		oldflag2=flag2;
+		
+		
+	
+		//2.打印地图 ，地图只打印一次 
+		PIMAGE img=newimage();
+		getimage(img,"C:/Users/ASUS/Desktop/map2.jpg"); 
+		
+		int pwidth = 1100, pheight = 720;
+		//Resize image to pwidth*pheight
+		PIMAGE save=gettarget();
+		//Get image size
+		settarget(img); 
+		int width,height;
+		width=getwidth();
+		height=getheight();
+		settarget(save); 
+		PIMAGE backproc=newimage(pwidth,pheight);
+		//Resize
+		putimage(backproc,0,0,pwidth,pheight,img,0,0,width,height); 
+		getimage(img,backproc,0,0,pwidth,pheight);
+		delimage(backproc);
+		
+		putimage(0,0,img);
+		//3.打印骑手 ,等文件输入没问题后，删除文件输入的相关部分，再调用这个部分 
+		if(size!=0)							
+			printmove();                                       
 		else{
 			SetColor(FOREGROUND_INTENSITY|FOREGROUND_RED|FOREGROUND_GREEN);
 			point a(15,34);
 			a.PrintRider();
 			carprint(a.x,a.y,0);
-			SetColor(FOREGROUND_INTENSITY);
+			SetColor(FOREGROUND_INTENSITY);	
 		}
-		//9、打印当前信息 
-		printmessage(Message); 			//需要增添动画功能 
-		//10、如果所有订单完成，跳出循环
-		for(j=0;j<size;j++){
-			if(Menu[j].truereach==0)
-			 	break;
-		}
-		if(j==size&&state==1)
-			break; 			//订单数组中的所有订单都完成了，跳出循环。	
+		
+		xyprintf(0,50,"SIZE = %d",size);
+		char str[20];
+		sprintf(str, "fps %.02f", getfps()); //调用getfps取得当前帧率
+		setcolor(WHITE);
+		outtextxy(0, 0, str);
+		
+		printcartoonmessage(Message);
 		Sleep(1000);
-		sysclock++;
-		ReleaseMutex(hMutex);		//解锁 
-	}		
-	fclose(fw);				//关闭文件
-	fclose(fp);	//关闭文件
-	SetCursorPosition(40,0);	
-	_endthreadex(0);	
+		ReleaseMutex(hMutex);
+	}
+	release();
+	_endthreadex(0);
 	return 0;
 }
-  
-int bankruptcy(int money)   //判断当前是否破产 
-{
-	int i;
-	if(money<0){
-		SetCursorPosition(34,0);
-		performance();		
-		return 0;
-	}
-	else
-		return 1;
-}
-
-
-

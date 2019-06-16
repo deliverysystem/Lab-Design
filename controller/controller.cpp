@@ -29,7 +29,7 @@ struct stop{
 			int flag;
 			int iscan;
 		};		
-struct message Message;			//MESSAGE 初始化 
+struct message Message={0};			//MESSAGE 初始化 
 				//接单数
 			
 unsigned __stdcall start(void* pArguments)
@@ -54,7 +54,7 @@ unsigned __stdcall start(void* pArguments)
 	int i=0;
 	FILE *fw=fopen("3.txt","r"); //打开文件 
 	FILE *fp=fopen("outputs.txt","w");      //输出文件 
-	for(;is_run()&&value==1;delay_fps(60)){	 			//大循环，控制整个进程 
+	for(;is_run()&&value==1;delay_fps(80)){	 			//大循环，控制整个进程 
 		WaitForSingleObject(hMutex,INFINITE);			//线程互斥语句 ，相当于上锁 
 		
 		
@@ -67,14 +67,68 @@ unsigned __stdcall start(void* pArguments)
 		q=0;
 		o=0;
 		i=0;
-		SetCursorPosition(9,82);
-		SetColor(FOREGROUND_INTENSITY|FOREGROUND_RED);
-		printf("KFC：餐厅");
-		SetCursorPosition(14,82); 
-		SetColor(FOREGROUND_INTENSITY|FOREGROUND_BLUE);
-		printf("BYR：食客"); 
-		SetColor(FOREGROUND_INTENSITY);
 		
+		//2.打印地图 ，地图只打印一次 
+		PIMAGE img=newimage();
+		getimage(img,"C:/Users/ASUS/Desktop/map2.jpg"); 
+		
+		/*int pwidth = 1100, pheight = 720;
+		//Resize image to pwidth*pheight
+		PIMAGE save=gettarget();
+		//Get image size
+		settarget(img); 
+		int width,height;
+		width=getwidth();
+		height=getheight();
+		settarget(save); 
+		PIMAGE backproc=newimage(pwidth,pheight);
+		//Resize
+		putimage(backproc,0,0,pwidth,pheight,img,0,0,width,height); 
+		getimage(img,backproc,0,0,pwidth,pheight);
+		delimage(backproc);*/
+		
+		putimage(0,0,img);
+		//3.打印骑手 ,等文件输入没问题后，删除文件输入的相关部分，再调用这个部分 
+		if(size!=0)							
+			printmove();                                       
+		else{
+			//SetColor(FOREGROUND_INTENSITY|FOREGROUND_RED|FOREGROUND_GREEN);
+			point a(15,34);
+			//a.PrintRider();
+			carprint(a.x,a.y,0);
+			//SetColor(FOREGROUND_INTENSITY);	
+		}
+		xyprintf(0,50,"SIZE = %d",size);
+		char str[20];
+		sprintf(str, "fps %.02f", getfps()); //调用getfps取得当前帧率
+		setcolor(WHITE);
+		outtextxy(0, 0, str);
+		
+		printorder();
+		printcartoonmessage(Message);
+		
+		
+        xyprintf(720, 0, "x = %10d  y = %10d",
+                 msg.x, msg.y);
+                 //第一行显示鼠标x,y位置.
+        xyprintf(720, 20, "move  = %d down  = %d up    = %d",
+                 (int)msg.is_move(),
+                 (int)msg.is_down(),
+                 (int)msg.is_up());
+                 //第二行显示鼠标是否有动作,按键状态
+        xyprintf(720, 40, "left  = %d mid   = %d right = %d",
+                 (int)msg.is_left(),
+                 (int)msg.is_mid(),
+                 (int)msg.is_right());
+                 //第三行显示鼠标被按下的按键(左,中,右)
+        xyprintf(720, 60, "wheel = %d  wheel rotate = %d",
+                 (int)msg.is_wheel(),
+                 msg.wheel);
+                 //第四行显示滚轮位置
+        xyprintf(720, 80, " %d   %d",        
+        		msg.x/27/3*2,
+				msg.y/27/3*2);
+				
 		for(j=0;j<size;j++){
 			if(Menu[j].truereach!=1&&sysclock-Menu[j].endtime>=30){		//破产 
 				money=-100;
@@ -93,66 +147,7 @@ unsigned __stdcall start(void* pArguments)
 		//1、判断是否破产 
 		boolnumber=bankruptcy(money);	
 		if(boolnumber==0)
-			break;
-		//2、买骑手的函数
-		//buyrider();			//移到cattoon 
-		/*//3.分配订单
-		if(oldsize!=size){			//如果没有新订单加入就不分配订单,有问题,鼠标分配				
-			Message.sum +=1;
-		}		
-		xyprintf(0,100,"OLDSIZE = %d",oldsize);
-		oldsize=size;*/
-		//3、读文件并分配订单 
-		for(;sysclock==(righttime+1)&&(!feof(fw));){			//判断是否到达接单时刻且文件没有读完 
-			if(sysclock==1){
-				fscanf(fw,"%d",&number);
-				fscanf(fw,"%d",&righttime);
-				break;										//此处改动 
-			} 
-			if(size!=0){
-				Menu[size].x1=0;						//初始化新增加的订单 
-				Menu[size].y1=0;
-				Menu[size].x2=0;
-				Menu[size].y2=0;
-				Menu[size].p=NULL;
-				Menu[size].get=0;
-				Menu[size].reach=0;
-				Menu[size].underline=0;
-				Menu[size].truereach=0;
-				Menu[size].trueget=0;
-				Menu[size].trueovertime=0;					
-			}
-			fscanf(fw,"%d",&Menu[size].x1);
-			fscanf(fw,"%d",&Menu[size].y1);
-			fscanf(fw,"%d",&Menu[size].x2);
-			fscanf(fw,"%d",&Menu[size].y2);
-			Menu[size].endtime=righttime+30;
-			//坐标变换
-			Menu[size].x1=2*Menu[size].x1+1;
-			Menu[size].y1=4*Menu[size].y1+2;
-			Menu[size].x2=2*Menu[size].x2+1;
-			Menu[size].y2=4*Menu[size].y2+2;
-			SetCursorPosition(Menu[size].x1,Menu[size].y1-1);
-			SetColor(FOREGROUND_INTENSITY|FOREGROUND_RED);
-			printf("KFC");
-			SetCursorPosition(Menu[size].x2,Menu[size].y2-1); 
-			SetColor(FOREGROUND_INTENSITY|FOREGROUND_BLUE);
-			printf("BYR");
-			SetColor(FOREGROUND_INTENSITY);			
-			size++;											
-			Message.sum+=1;					//接单数+1	 
-			
-		//4、分配订单 
-			allocatemenu(size-1);		//size-1为此刻新接订单在订单数组中的下标 
-			if(feof(fw)==0){
-				fscanf(fw,"%d",&number);
-				fscanf(fw,"%d",&righttime);	
-			}
-			if(feof(fw)!=0){
-				state=1; 
-				break;
-			}
-		}														
+			break;							
 		//5、判断是否到达送餐点，判断是否超时,采用遍历订单的方法 
 		for(j=0;j<size;j++){				
 			if((((Menu[j].x1-2)==(Menu[j].p)->x&&Menu[j].y1==(Menu[j].p)->y)||(Menu[j].x1==(Menu[j].p)->x&&(Menu[j].y1+4)==(Menu[j].p)->y)||(Menu[j].x1==(Menu[j].p)->x&&(Menu[j].y1-4)==(Menu[j].p)->y)||((Menu[j].x1+2)==(Menu[j].p)->x&&(Menu[j].y1)==(Menu[j].p)->y))&&(Menu[j].trueget==0)){ //骑手到达接餐地 
@@ -204,21 +199,7 @@ unsigned __stdcall start(void* pArguments)
 				deletelist(j);
 			} 
 		}
-		//6、防止消除其他单的餐客
-		for(j=0;j<size;j++)
-		{
-			if(Menu[j].trueget!=1){
-				SetCursorPosition(Menu[j].x1,Menu[j].y1-1);
-				SetColor(FOREGROUND_INTENSITY|FOREGROUND_RED);
-				printf("KFC");
-			}
-			if(Menu[j].truereach!=1){
-				SetCursorPosition(Menu[j].x2,Menu[j].y2-1);
-				SetColor(FOREGROUND_INTENSITY|FOREGROUND_BLUE);
-				printf("BYR");
-			}
-		} 
-		SetColor(FOREGROUND_INTENSITY);
+		
 		//7、将信息输入到文件中
 		fprintf(fp,"时间：%d\n",sysclock);
 		fprintf(fp,"钱：%d\n",money);
@@ -282,18 +263,9 @@ unsigned __stdcall start(void* pArguments)
 				}
 			fprintf(fp,";\n");
 		} 
-		/*//7、对骑手进行移动 ，等鼠标输入时删掉该部分						 
-		 if(size!=0)								//此处改动 
-			printmove();
-		else{
-			SetColor(FOREGROUND_INTENSITY|FOREGROUND_RED|FOREGROUND_GREEN);
-			point a(15,34);
-			a.PrintRider();
-			carprint(a.x,a.y,0);
-			SetColor(FOREGROUND_INTENSITY);
-		}*/
-		//9、打印当前信息 
-		//printmessage(Message); 			//需要增添动画功能 
+		
+				
+		
 		//10、如果所有订单完成，跳出循环
 		for(j=0;j<size;j++){
 			if(Menu[j].truereach==0)
@@ -301,13 +273,14 @@ unsigned __stdcall start(void* pArguments)
 		}
 		if(j==size&&state==1)
 			break; 			//订单数组中的所有订单都完成了，跳出循环。	
-		Sleep(1000);
+		
 		sysclock++;
+		Sleep(500);
 		ReleaseMutex(hMutex);		//解锁 
+		
 	}		
 	fclose(fw);				//关闭文件
 	fclose(fp);	//关闭文件
-	SetCursorPosition(40,0);	
 	_endthreadex(0);	
 	return 0;
 }
@@ -323,6 +296,3 @@ int bankruptcy(int money)   //判断当前是否破产
 	else
 		return 1;
 }
-
-
-

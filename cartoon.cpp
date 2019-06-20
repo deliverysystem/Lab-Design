@@ -43,12 +43,14 @@ void carprint(int x,int y,int i){
 		
 		//2.打印骑手 */
 		putimage((y-2)/4*41,(x-1)/2*41+17,rider[i].Riderimg);
+		//putimage(720,200+50*i,rider[i].Riderimg); 
 		xyprintf((y-2)/4*41,(x-1)/2*41+17,"%d",i);
 	}
 	else{
 		getimage(rider[i].Riderimg,"C:/Users/linln/Desktop/lab/Lab-Design-cartoon/pic/7.jpg");
 		
 		putimage((y-2)/4*41+17,(x-1)/2*41,rider[i].Riderimg);
+		//putimage(720,200+50*i,rider[i].Riderimg); 
 		xyprintf((y-2)/4*41,(x-1)/2*41+17,"%d",i);
 	}
 }
@@ -167,4 +169,3 @@ unsigned __stdcall getinput(void* pArguments){
 	_endthreadex(0);
 	return 0;
 }
-

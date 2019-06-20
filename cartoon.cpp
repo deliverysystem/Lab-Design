@@ -37,22 +37,25 @@ void clearrider(int x,int y,int i){//清除骑手上一个位置的图像，有�
 }
 void carprint(int x,int y,int i){
 	//打印骑手 
+	PIMAGE img1; 
+	img1=newimage();
 	if(((y-2)/4*41)%2==0){				//如果骑手在横轴上 
 		//cleardevice(rider[i].Riderimg);
-		getimage(rider[i].Riderimg,"C:/Users/linln/Desktop/lab/Lab-Design-cartoon/pic/9.jpg");
+		getimage(img1,"C:/Users/ASUS/Desktop/9.jpg");
 		
 		//2.打印骑手 */
-		putimage((y-2)/4*41,(x-1)/2*41+17,rider[i].Riderimg);
+		putimage((y-2)/4*41,(x-1)/2*41+17,img1);
 		//putimage(720,200+50*i,rider[i].Riderimg); 
 		xyprintf((y-2)/4*41,(x-1)/2*41+17,"%d",i);
 	}
 	else{
-		getimage(rider[i].Riderimg,"C:/Users/linln/Desktop/lab/Lab-Design-cartoon/pic/7.jpg");
+		getimage(img1,"C:/Users/ASUS/Desktop/7.jpg");
 		
-		putimage((y-2)/4*41+17,(x-1)/2*41,rider[i].Riderimg);
+		putimage((y-2)/4*41+17,(x-1)/2*41,img1);
 		//putimage(720,200+50*i,rider[i].Riderimg); 
 		xyprintf((y-2)/4*41,(x-1)/2*41+17,"%d",i);
 	}
+	delimage(img1);
 }
 
 void printmove()
@@ -88,20 +91,21 @@ void printmove()
 
 void printorder(){
 	int i;
-	PIMAGE img;
-	img = newimage();
-	getimage(img,"C:/Users/linln/Desktop/lab/Lab-Design-cartoon/pic/12.jpg"); 
+	PIMAGE img2;
+	img2 = newimage();
+	getimage(img2,"C:/Users/ASUS/Desktop/12.jpg"); 
 		
 	for(i=0;Menu[i].x1!=0;i++){
 		if(Menu[i].trueget==0){//没取 
-			putimage((Menu[i].y1-2)/4*41,(Menu[i].x1-1)/2*41,img);
+			putimage((Menu[i].y1-2)/4*41,(Menu[i].x1-1)/2*41,img2);
 			xyprintf((Menu[i].y1-2)/4*41,(Menu[i].x1-1)/2*41,"%d A",i);//后期可以改为贴图 
 		}
 		if(Menu[i].truereach==0&&Menu[i].mouseup==1){//没到 
-			putimage((Menu[i].y2-2)/4*41,(Menu[i].x2-1)/2*41,img);
+			putimage((Menu[i].y2-2)/4*41,(Menu[i].x2-1)/2*41,img2);
 			xyprintf((Menu[i].y2-2)/4*41,(Menu[i].x2-1)/2*41,"%d B",i);//后期可以改为贴图 
 		}
 	}
+	delimage(img2);
 } 
 unsigned __stdcall getinput(void* pArguments){
 	WaitForSingleObject(hMutex,INFINITE);

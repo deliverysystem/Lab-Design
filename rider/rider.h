@@ -6,6 +6,7 @@
 #include "menu.h"
 #include "list.h"
 #include <graphics.h>
+
 class Rider{
   public:
     int x,y;
@@ -14,18 +15,17 @@ class Rider{
 		x=fx,y=fy;
 	};
     List Path,OldPath;
-    int receive;//楠戞墜鐨勬帴鍗曟暟
-    int achieve;//楠戞墜鐨勫畬鎴愭暟
-    int overtime;//楠戞墜瓒呮椂鏁?
-    PIMAGE Riderimg;
+    int receive;//骑手的接单数
+    int achieve;//骑手的完成数
+    int overtime;//骑手超时数
     Rider() {}
     Rider(int x,int y):x(x),y(y) {}
     int exist;
     struct menu* waitlist;
-    int CalculatePath(struct menu* newmenu);//璇曠畻閫佸畬鏈€鍚庝竴鍗曠殑鏃堕棿
+    int CalculatePath(struct menu* newmenu);//试算送完最后一单的时间
     int Manhatten(point* x,point* y);
     void GeneratePath(point* A,struct menu*,int t);
-    void AddTOWaitlist(struct menu* newmenu);//灏嗘柊鐨勮鍗曟坊鍔犺繘waitlist
+    void AddTOWaitlist(struct menu* newmenu);//将新的订单添加进waitlist
     void generfunc(point* Now,struct menu* now,int disx,int disy,int idx,int idy,int T);
     int Calcux(point* A,point* B);
     int Calcuy(point* A,point* B);

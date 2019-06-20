@@ -13,9 +13,9 @@
 #include"menu.h" 
 #include"cartoon.h"
 //全局变量： 
-HANDLE hMutex=CreateMutex(NULL,FALSE,NULL);
+HANDLE hMutex = CreateMutex(NULL,FALSE,NULL);
 int sysclock=0;
-int money=700;
+int money=850;
 struct menu Menu[301]={0};	//订单动态数组 
 Rider rider[100];		//骑手动态数组 
 int Graph[100][100];
@@ -54,7 +54,7 @@ unsigned __stdcall start(void* pArguments)
 	int i=0;
 	FILE *fw=fopen("3.txt","r"); //打开文件 
 	FILE *fp=fopen("outputs.txt","w");      //输出文件 
-	for(;is_run()&&value==1;delay_fps(80)){	 			//大循环，控制整个进程 
+	for(;is_run()&&value==1;delay_fps(60)){	 			//大循环，控制整个进程 
 		WaitForSingleObject(hMutex,INFINITE);			//线程互斥语句 ，相当于上锁 
 		
 		
@@ -70,23 +70,7 @@ unsigned __stdcall start(void* pArguments)
 		
 		//2.打印地图 ，地图只打印一次 
 		PIMAGE img=newimage();
-		getimage(img,"C:/Users/ASUS/Desktop/map2.jpg"); 
-		
-		/*int pwidth = 1100, pheight = 720;
-		//Resize image to pwidth*pheight
-		PIMAGE save=gettarget();
-		//Get image size
-		settarget(img); 
-		int width,height;
-		width=getwidth();
-		height=getheight();
-		settarget(save); 
-		PIMAGE backproc=newimage(pwidth,pheight);
-		//Resize
-		putimage(backproc,0,0,pwidth,pheight,img,0,0,width,height); 
-		getimage(img,backproc,0,0,pwidth,pheight);
-		delimage(backproc);*/
-		
+		getimage(img,"C:/Users/linln/Desktop/lab/Lab-Design-cartoon/pic/map2.jpg"); 
 		putimage(0,0,img);
 		//3.打印骑手 ,等文件输入没问题后，删除文件输入的相关部分，再调用这个部分 
 		if(size!=0)							
@@ -146,8 +130,8 @@ unsigned __stdcall start(void* pArguments)
 		}
 		//1、判断是否破产 
 		boolnumber=bankruptcy(money);	
-		if(boolnumber==0)
-			break;							
+		/*if(boolnumber==0)
+			break;		*/					
 		//5、判断是否到达送餐点，判断是否超时,采用遍历订单的方法 
 		for(j=0;j<size;j++){				
 			if((((Menu[j].x1-2)==(Menu[j].p)->x&&Menu[j].y1==(Menu[j].p)->y)||(Menu[j].x1==(Menu[j].p)->x&&(Menu[j].y1+4)==(Menu[j].p)->y)||(Menu[j].x1==(Menu[j].p)->x&&(Menu[j].y1-4)==(Menu[j].p)->y)||((Menu[j].x1+2)==(Menu[j].p)->x&&(Menu[j].y1)==(Menu[j].p)->y))&&(Menu[j].trueget==0)){ //骑手到达接餐地 

@@ -3,6 +3,7 @@
 #include <windows.h>
 #include <graphics.h>
 #include <process.h> 
+#include <time.h>
 
 #include"controller.h"
 #include"point.h"
@@ -12,6 +13,8 @@
 #include"map.h"
 #include"menu.h" 
 #include"cartoon.h"
+
+#define EPS 1e-2
 //全局变量： 
 HANDLE hMutex = CreateMutex(NULL,FALSE,NULL);
 int sysclock=0;
@@ -31,7 +34,14 @@ struct stop{
 		};		
 struct message Message={0};			//MESSAGE 初始化 
 				//接单数
-			
+
+bool eps(clock_t x)
+{
+	if(abs(x)<EPS)
+		return 1;
+	return 0;
+}
+
 unsigned __stdcall start(void* pArguments)
 {
 	SetWindowSize(140,120);			//原图为78*51  
@@ -54,6 +64,7 @@ unsigned __stdcall start(void* pArguments)
 	int i=0;
 	FILE *fw=fopen("3.txt","r"); //打开文件 
 	FILE *fp=fopen("outputs.txt","w");      //输出文件 
+	clock_t start = clock();
 	for(;is_run()&&value==1;delay_fps(60)){	 			//大循环，控制整个进程 
 		WaitForSingleObject(hMutex,INFINITE);			//线程互斥语句 ，相当于上锁 
 		
@@ -68,19 +79,40 @@ unsigned __stdcall start(void* pArguments)
 		o=0;
 		i=0;
 		
-		//2.打印地图 ，地图只打印一次 
-		PIMAGE img=newimage();
-		getimage(img,"C:/Users/linln/Desktop/lab/Lab-Design-cartoon/pic/map2.jpg"); 
-		putimage(0,0,img);
+		
 		//3.打印骑手 ,等文件输入没问题后，删除文件输入的相关部分，再调用这个部分 
-		if(size!=0)							
-			printmove();                                       
+		clock_t now=clock();
+		xyprintf(720,400,"%lld",(now-start)/1000);
+		if(size!=0&&((now-start)/2000))
+		{	
+			//2.打印地图 
+			PIMAGE img=newimage();
+			getimage(img,"C:/Users/linln/Desktop/lab/Lab-Design-cartoon/pic/map2.jpg"); 
+			putimage(0,0,img);
+			sysclock++;
+			printmove(); 
+			printcartoonmessage(Message);
+			start = now;
+			
+			}							
+			                                     
 		else{
-			//SetColor(FOREGROUND_INTENSITY|FOREGROUND_RED|FOREGROUND_GREEN);
-			point a(15,34);
-			//a.PrintRider();
-			carprint(a.x,a.y,0);
-			//SetColor(FOREGROUND_INTENSITY);	
+			if((now-start)/2000)
+				{
+				//2.打印地图 
+				PIMAGE img=newimage();
+				getimage(img,"C:/Users/linln/Desktop/lab/Lab-Design-cartoon/pic/map2.jpg"); 
+				putimage(0,0,img);
+				sysclock++;
+				printcartoonmessage(Message);
+				start = now;
+				//SetColor(FOREGROUND_INTENSITY|FOREGROUND_RED|FOREGROUND_GREEN);
+				point a(15,34);
+				//a.PrintRider();
+				carprint(a.x,a.y,0);
+				//SetColor(FOREGROUND_INTENSITY);
+				}
+				
 		}
 		xyprintf(0,50,"SIZE = %d",size);
 		char str[20];
@@ -89,7 +121,7 @@ unsigned __stdcall start(void* pArguments)
 		outtextxy(0, 0, str);
 		
 		printorder();
-		printcartoonmessage(Message);
+		
 		
 		
         xyprintf(720, 0, "x = %10d  y = %10d",
@@ -258,8 +290,8 @@ unsigned __stdcall start(void* pArguments)
 		if(j==size&&state==1)
 			break; 			//订单数组中的所有订单都完成了，跳出循环。	
 		
-		sysclock++;
-		Sleep(500);
+	
+		
 		ReleaseMutex(hMutex);		//解锁 
 		
 	}		

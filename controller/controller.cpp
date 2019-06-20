@@ -65,6 +65,8 @@ unsigned __stdcall start(void* pArguments)
 	FILE *fw=fopen("3.txt","r"); //打开文件 
 	FILE *fp=fopen("outputs.txt","w");      //输出文件 
 	clock_t start = clock();
+	PIMAGE img=newimage();
+	getimage(img,"C:/Users/ASUS/Desktop/map2.jpg"); 
 	for(;is_run()&&value==1;delay_fps(60)){	 			//大循环，控制整个进程 
 		WaitForSingleObject(hMutex,INFINITE);			//线程互斥语句 ，相当于上锁 
 		
@@ -86,8 +88,6 @@ unsigned __stdcall start(void* pArguments)
 		if(size!=0&&((now-start)/2000))
 		{	
 			//2.打印地图 
-			PIMAGE img=newimage();
-			getimage(img,"C:/Users/linln/Desktop/lab/Lab-Design-cartoon/pic/map2.jpg"); 
 			putimage(0,0,img);
 			sysclock++;
 			printmove(); 
@@ -99,9 +99,7 @@ unsigned __stdcall start(void* pArguments)
 		else{
 			if((now-start)/2000)
 				{
-				//2.打印地图 
-				PIMAGE img=newimage();
-				getimage(img,"C:/Users/linln/Desktop/lab/Lab-Design-cartoon/pic/map2.jpg"); 
+				//2.打印地图  
 				putimage(0,0,img);
 				sysclock++;
 				printcartoonmessage(Message);

@@ -1,6 +1,7 @@
 #include"rider.h"
 #include"menu.h"
 #include"controller.h"
+#include"cartoon.h"
 #include<stdio.h>
 #include<stdlib.h> 
 
@@ -29,20 +30,22 @@ void addmenulist(int A,int object){//添加订单
 
 void buyrider(){//买骑手
 	int i;
-	while(money>=350){//大于400是为了留一段缓冲，防止买完骑手没钱导致破产 
+	while(money>=310){//大于400是为了留一段缓冲，防止买完骑手没钱导致破产 
 		for(i=0;rider[i].exist==1;i++){};//判断哪些骑手存在
 		rider[i].exist=1;
 		rider[i+1].exist=0;
 		if(i==1){//初始化,使nextmenuptr成为每个骑手订单链表的头指针 
 			rider[0].waitlist=creatmenulist();
 			rider[0].Path.init();
-			rider[i].waitlist=creatmenulist();
+			rider[1].waitlist=creatmenulist();
 			rider[1].Path.init();
-			rider[i].receive =0;
-			rider[i].achieve=0;
-			rider[i].overtime=0;
-			rider[i].x=15;
-			rider[i].y=34;
+			rider[1].receive =0;
+			rider[1].achieve=0;
+			rider[1].overtime=0;
+			rider[1].x=15;
+			rider[1].y=34;
+			initimg(0);
+			initimg(1);
 		}
 		else{ 
 			rider[i].waitlist=creatmenulist();
@@ -52,6 +55,7 @@ void buyrider(){//买骑手
 			rider[i].overtime=0;
 			rider[i].x=15;
 			rider[i].y=34;
+			initimg(i);
 		}
 		money=money-300;
 	}
